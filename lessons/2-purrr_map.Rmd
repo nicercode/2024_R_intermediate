@@ -20,7 +20,7 @@ library(tidyverse)
 Here it is, constructed using for loops
 
 ```{r}
-files <- list.files("data/species", full.names = TRUE)
+files <- list.files("data/penguins/", full.names = TRUE)
 data <- list()
 for (i in seq_along(files)) {
   data[[i]] <- read_csv(files[i])
@@ -32,7 +32,7 @@ data <- data %>% bind_rows()
 The alternative way using map is
 
 ```{r}
-data <- list.files("data/species", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 ```
 
 Comparing the above two methods, which do you prefer and why?
@@ -68,8 +68,8 @@ First, try using for loop
 
 ```{r}
 n <- list()
-for (f in unique(data$family)) {
-  data_sub <- subset(data, data$family == f)
+for (f in unique(data$genus)) {
+  data_sub <- subset(data, data$genus == f)
   n[[f]] <- data.frame(family = f, n = n_distinct(data_sub$scientificName))
 }
 bind_rows(n)
@@ -78,7 +78,7 @@ bind_rows(n)
 The tidyverse way
 ```{r}
 data %>%
-  group_by(family) %>%
+  group_by(genus) %>%
   summarise(n = n_distinct(scientificName))
 ```
 
@@ -87,7 +87,7 @@ data %>%
 The pipe is a bit of magic. It's written by `%>%` (Shift-Command-M on Mac or Shift-Control-M on PC ). We can use "the pipe" [%>%](http://magrittr.tidyverse.org/reference/pipe.html) to connect expressions
 
 ```{r}
-data$family %>% unique()
+data$genus %>% unique()
 ```
 
 The pipe 
@@ -108,13 +108,32 @@ The pipe
 
 **Exercises:** Using the pipe, write expressions to
 
-1. Take the mean of all latitudes  (should be 5.16117)
+1. Take the mean of all latitudes  (should be -43.90382)
 
 ```{r, drop}
-data$decimalLatitude %>% mean()
+data$decimalLatitude %>% mean(na.rm=TRUE)
 ```
 
-2. List all the species names in alphabetic order
+
+2. Take the mean of all latitudes  for oberservations from june july and august (should be -31.0683)
+
+```{r, drop}
+data %>% 
+  filter(month %in% c(6,7,8)) %>%
+  pull(decimalLatitude) %>%
+  mean(na.rm=TRUE)
+```
+
+3. Take the mean of all latitudes  for oberservations from december, january and february (should be -47.07444)
+
+```{r, drop}
+data %>% 
+  filter(month %in% c(1,2,3)) %>%
+  pull(decimalLatitude) %>%
+  mean(na.rm=TRUE)
+```
+
+4. List all the species names in alphabetic order
 
 ```{r, drop}
 data %>%
@@ -122,7 +141,7 @@ data %>%
   distinct(scientificName)
 ```
 
-3. List all the species names in reverse alphabetic order
+5. List all the species names in reverse alphabetic order
 
 ```{r, drop}
 data$scientificName %>%
@@ -187,18 +206,18 @@ data_subset <-
 
 **Exercises:** Apply the `dplyr` package and `pipes` to
 
-1. Create a subset of the dataset consisting of only rows for the family "Mustelidae"
+1. Create a subset of the dataset consisting of only rows for the genus "Aptenodytes"
 
 ```{r, drop}
-subset_mustelids <- data %>% filter(family == "Mustelidae")
+subset_emperors<- data %>% filter(genus == "Aptenodytes")
 ```
 
 2. As above and only including variables `scientificName`, `decimalLatitude`, `decimalLongitude `
 
 ```{r, drop}
-subset_mustelids <- 
+subset_emperors <- 
   data %>%
-  filter(family == "Mustelidae") %>%
+  filter(genus == "Aptenodytes") %>%
   select(scientificName, decimalLatitude, decimalLongitude)
 ```
 
@@ -207,7 +226,7 @@ subset_mustelids <-
 ```{r, drop}
 subset_mustelids <- 
   data %>%
-  filter(family == "Mustelidae") %>%
+  filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%
   arrange(decimalLatitude)
 ```
@@ -217,7 +236,7 @@ subset_mustelids <-
 ```{r, drop}
 subset_mustelids <- 
   data %>%
-  filter(family == "Mustelidae") %>%
+  filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%
   arrange(decimalLatitude) %>%
   mutate(abs_decimalLatitude = abs(decimalLatitude))
@@ -229,7 +248,7 @@ Another useful dplyr function is `group_by`. This is a type of "for loop"
 
 ```{r}
 data %>%
-  group_by(family) %>%
+  group_by(genus) %>%
   summarise(
     n_sp = n_distinct(scientificName),
     n_records = n()
@@ -279,7 +298,7 @@ makes use of lists!
 
 loading files
 ```{r}
-files <- list.files("data/species", full.names = TRUE)
+files <- list.files("data/penguins", full.names = TRUE)
 data <- list()
 for (i in seq_along(files)) {
   data[[i]] <- read_csv(files[i])
@@ -290,7 +309,7 @@ data <- data %>% bind_rows()
 Alternative way
 ```{r}
 data <- 
-  list.files("data/species", full.names = TRUE) %>%
+  list.files("data/penguins", full.names = TRUE) %>%
   map(read_csv) %>%
   bind_rows()
 ```
@@ -304,7 +323,7 @@ How a map routine works works. 3 key steps
 Each bit needs to be able to run independently 
 
 ```{r}
-files <- list.files("data/species", full.names = TRUE)
+files <- list.files("data/penguins", full.names = TRUE)
 
 read_csv(files[1])
 read_csv(files[2])
@@ -318,7 +337,7 @@ map(files, read_csv) %>% bind_rows()
 
 files %>% map(read_csv)
 
-list.files("data/species", full.names = TRUE) %>%
+list.files("data/penguins", full.names = TRUE) %>%
   map(read_csv) %>%
   bind_rows()
 ```
@@ -336,7 +355,7 @@ Important to understand how a list works
 1. Load the first 10 files in the folder "data/species"
 
 ```{r, drop}
-files <- list.files("data/species", full.names = TRUE)[1:10]
+files <- list.files("data/penguins", full.names = TRUE)[1:10]
 
 files %>%
   map(read_csv) %>%
@@ -379,13 +398,13 @@ data %>%
 ### Returning a dataframe
 
 ```{r}
-list.files("data/species", full.names = TRUE) %>%
+list.files("data/penguins", full.names = TRUE) %>%
   map(read_csv) %>%
   bind_rows()
 ```
 or
 ```{r}
-list.files("data/species", full.names = TRUE) %>% map_df(read_csv)
+list.files("data/penguins", full.names = TRUE) %>% map_df(read_csv)
 ```
 
 ### map2 -- when you have 2 inputs
@@ -396,16 +415,16 @@ Here we copy one file.
 ```{r}
 dir.create("output")
 
-file.copy("data/species/Aonyx.csv", "output/data-Aonyx.csv")
+file.copy("data/penguins/Aptenodytes forsteri.csv", "output/Aptenodytes forsteri.csv")
 ```
 
 Now let's copy all of them by calling map:
 
 ```{r}
 # 
-location1 <- list.files("data/species", full.names = TRUE)
+location1 <- list.files("data/penguins", full.names = TRUE)
 location2 <- 
-  location1 %>% str_replace_all("data/species/", "output/data-")
+  location1 %>% str_replace_all("data/penguins/", "output/data-")
 
 walk2(location1, location2, file.copy)
 ```
