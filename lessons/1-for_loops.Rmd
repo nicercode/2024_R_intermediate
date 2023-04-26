@@ -10,8 +10,10 @@ editor_options:
 
 The goal of this prac is to learn to get the computer to repeat things for you and therefore avoid tedium and burnout and stay a happy PhD student with a obedient computer rather than a frustrated, burned-out one with RSI. 
 ```{r}
-for (i in c(3, 7, 3)) {
-  print(i)
+library(tidyverse)
+
+for (current_number in c(3, 7, 3)) {
+  print(current_number)
 }
 5 + 3
 
@@ -31,32 +33,68 @@ letters
 LETTERS
 ```
 
+keep this in mind for the tasks below.
+
 **Exercises:**
-1. Write a for loop that prints out each letter sequentially through the alphabet
+1. Write a `for` loop that prints out each letter sequentially through the alphabet
 
 ```{r, drop}
-for (i in letters) {
-  print(i)
+for (current_letter in letters) {
+  print(current_letter)
 }
 ```
 
-2. (stretch) Write a for loop that prints out every letter except `q`.  never liked `q` anyway.  
+2. (stretch) Write a `for` loop that prints out every letter except `q`.  never liked `q` anyway.  
 
 ```{r, drop}
-for (i in letters[letters != "q"]) {
-  print(i)
+for (current_letter in letters[letters != "q"]) {
+  print(current_letter)
 }
 ```
 
-Now look at the directory `data/species`.  It's full of genus level downloads from [GBIF](https://www.gbif.org).   Load all of these csv's into R and combine them into one data frame.
+
+
+
+now some fun code (which will also be useful later).  Note that we're putting the map data into the `geom` part of this call.  this means that we can add additional data 
 
 ```{r}
-library(tidyverse)
+ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
+  coord_fixed(1.3)
+
+```
+
+Note that we're putting the map data into the `geom` part of this call.  this means that we can add additional data to other geoms and plot on top of the map 
+
+```{r}
+origin<-data.frame(x=0,y=0)
+
+ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
+  coord_fixed(1.3)+
+  geom_point(data=origin,aes(x=x,y=0),col="red",size=5)
+
+```
+
+now here is a new set of data on penguins! 🐧🐧🐧🐧 and maybe some new functions to learn
+
+these are real data from GBIF with all of the features and flaws of real data.  
+
+```{r}
+
 csv_file_name_vector <- list.files("data/penguins/",full.names = TRUE)
+# note that this returns the path from the working directory to all the penguin files. 
+# apparently there are 19 penguin species in the world.  The first one alphabetically is Aptenodytes forsteri
+```
+
+https://en.wikipedia.org/wiki/Emperor_penguin
+
+
+```{r}
 a <- read_csv("data/penguins/Aptenodytes forsteri.csv")
 a
 
-# Putting it in a list
+# Putting all penguins in a list
 
 list_of_data <- list()
 
@@ -77,30 +115,42 @@ Ugh this is gonna take forever ... what about a loop?
 
 ```{r}
 files <- list.files("data/penguins/",full.names = TRUE)
+```
 
-
+sometimes you want to use the index in the `for` loop for two different things, (1) going through the input vector and (2) storing in the output list. In this case the convention is to use the letter `i`, because it's hard to think of a more informative way to describe these two different (but related) roles.  The vector that `i` goes over is *usually* from 1 to the number of inputs or in this case `1:length(files)`
+ 
+```{r}
 pen<-list()
-for (current_file in files) {
-  pen[[i]] <- read_csv(files)
+for (i in 1:length(files)) {
+  pen[[i]] <- read_csv(files[i])
 }
 
 pen_all <- bind_rows(pen)
 dim(pen_all)
 ```
 
-**Exercises:**
+That's it. you're now all `for` loop experts. Time for practice.  
+
+## More Exercises
+
 1. Filter the data set to only iNaturalist records (see column institutionCode), split by species, and write each species data to a separate file in a folder called `inat_penguins`  You'll also need a function called `paste` or `paste0`
+
+Note in this case the index is only needed for one thing so you can use an informative index.
+
+Here is part of the answer: the line of code for writing the dataframe to a file, with one way to do the naming part.  
+
+`write_csv(curr_df, paste0("data/inat_penguins/",current_species,".csv"))`
+
+see if you can figure out the rest.  Other functions you might need are `unique` and `filter`, but there are many different solutions
 
 ```{r, drop}
 
-inat<-filter(pen_all,institutionCode=="iNaturalist")
+inat<-filter(pen_all, institutionCode=="iNaturalist")
 
 for(current_species in unique(inat$species)){
   curr_df<-filter(inat, species==current_species)
   write_csv(curr_df,paste0("data/inat_penguins/",current_species,".csv"))
 }
-
-
 ```
 
 
@@ -171,7 +221,6 @@ worldplot <- ggplot() +
   theme_void()
 worldplot
 ```
-
 
 
 6. find a dubious penguin record and identify who's to blame
