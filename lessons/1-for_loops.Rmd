@@ -66,6 +66,7 @@ ggplot() +
 Note that we're putting the map data into the `geom` part of this call.  this means that we can add additional data to other geoms and plot on top of the map 
 
 ```{r}
+world <- map_data("world")
 origin <- data.frame(x = 0, y = 0)
 
 ggplot() +
@@ -140,6 +141,7 @@ Here is part of the answer: the line of code for writing the dataframe to a file
 see if you can figure out the rest.  Other functions you might need are `unique` and `filter`, but there are many different solutions
 
 ```{r, drop}
+dir.create("data/inat_penguins/")
 inat <- filter(pen_all, institutionCode == "iNaturalist")
 
 for (current_species in unique(inat$species)) {

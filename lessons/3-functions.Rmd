@@ -204,6 +204,7 @@ load_file <- function(x) {
 data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 ```
 
+
 **Exercises:**  We'll now make some plots
 
 some pretty code to use 
@@ -240,7 +241,7 @@ plot_genus <- function(df, genus) {
 plot_family(data, "Eudyptes")
 ```
 
-2. Now re-write this function so it works with map, and make a plot of all the families
+2. Now re-write this function so it works with map, and make a plot of all the genera
 
 ```{r, drop}
 plot_genus <- function(df, genus) {
@@ -317,7 +318,29 @@ short_name <- function(x) {
 data$scientificName %>% map_chr(short_name)
 ```
 
+5. Your penguin colleagues think that some species migrate more than others.  They ask you to write a function that calculates the difference between median jun-jul-aug-sept latitude and median dec-jan-feb-mar latitude.  Then apply this function to each species. Return a table of "migration distance in latitude degrees" by species, also include the number of observations in summer and the number in winter.  the `%in%` function may be useful.  
 
+Note some penguin species may have never been observed in winter.  (Where do they go????)
+
+```{r drop}
+migration_latitude <- function(species_of_interest, df) {
+  sp_df <- filter(df, species == species_of_interest)
+  winter <- filter(sp_df, month %in% c(6, 7, 8, 9))
+  summer <- filter(sp_df, month %in% c(12, 1, 2, 3))
+  data.frame(
+    species = species_of_interest,
+    lat_migration = median(summer$decimalLatitude, na.rm = TRUE) - median(winter$decimalLatitude, na.rm = TRUE),
+    winter_n = nrow(winter),
+    summer_n = nrow(summer)
+  )
+}
+
+output_df <- list()
+for (i in seq_along(unique(pen_all$species))) {
+  output_df[[i]] <- migration_latitude(unique(pen_all$species)[i], pen_all)
+}
+bind_rows(output_df)
+```
 ## Writing longer functions
 
 Store these in another file and load using `source`
