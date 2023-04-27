@@ -35,8 +35,7 @@ data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 Example 1 - tidy & turbo charge model fitting
 
 ```{r}
-
-only_counts <- filter(data,individualCount>0)
+only_counts <- filter(data, individualCount > 0)
 
 library(performance)
 
@@ -47,7 +46,7 @@ fit_model <- function(data_in) {
 check_model(fits[[1]])
 
 get_r2 <- function(fit_in) {
-  r<-performance::r2(fit_in)
+  r <- performance::r2(fit_in)
   return(r$R2)
 }
 
@@ -79,9 +78,11 @@ make_plot <- function(penguin_of_interest, pen_all = pen_all) {
       col = "grey",
       alpha = 0.1
     ) +
-    geom_point(data = pen_large_counts,
-               aes(x = decimalLongitude, y = decimalLatitude),
-               col = "red") +
+    geom_point(
+      data = pen_large_counts,
+      aes(x = decimalLongitude, y = decimalLatitude),
+      col = "red"
+    ) +
     ggtitle(penguin_of_interest) +
     theme_void()
   print(worldplot)
@@ -89,7 +90,7 @@ make_plot <- function(penguin_of_interest, pen_all = pen_all) {
 }
 
 
-make_plot(unique(pen_all$species)[10],pen_all)
+make_plot(unique(pen_all$species)[10], pen_all)
 ```
 
 
@@ -111,7 +112,6 @@ save_plot <- function(penguin_of_interest_in, pen_all = pen_all, path = "output/
 for (penguin_of_interest in penguin_species) {
   save_plot(penguin_of_interest, pen_all)
 }
-
 ```
 
 # Structure of a function
@@ -153,7 +153,7 @@ find_largest_negative <- function(x) {
   max(x[x < 0])
 }
 
-data %>% 
+data %>%
   group_by(scientificName) %>%
   summarise(most_northern_south = find_largest_negative(decimalLatitude))
 ```
@@ -178,11 +178,11 @@ find_largest_negative_better <- function(x) {
 }
 
 
-data %>% 
+data %>%
   group_by(scientificName) %>%
   summarise(
     north_south = find_largest_negative_better(decimalLatitude)
-    )
+  )
 ```
 
 
@@ -214,7 +214,7 @@ ggplot() +
   geom_polygon(
     data = world_map, aes(x = long, y = lat, group = group),
     fill = "darkgrey", colour = "white"
-  )+
+  ) +
   coord_equal()
 ```
 
@@ -278,7 +278,6 @@ very_short_name <- function(x) {
 }
 
 data$speciescode <- data$species %>% map_chr(very_short_name)
-
 ```
 
 ## Anonymous functions
@@ -329,7 +328,6 @@ Identify the bit that will differ and
 **Exercises:** Write a function called `load_data` that loads the penguin data and creates a column with short name and very short name
 
 ```{r, drop}
-
 load_file <- function(x) {
   read_csv(x,
     col_types =

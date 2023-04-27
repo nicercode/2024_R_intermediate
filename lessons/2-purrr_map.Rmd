@@ -111,26 +111,26 @@ The pipe
 1. Take the mean of all latitudes  (should be -43.90382)
 
 ```{r, drop}
-data$decimalLatitude %>% mean(na.rm=TRUE)
+data$decimalLatitude %>% mean(na.rm = TRUE)
 ```
 
 
 2. Take the mean of all latitudes  for oberservations from june july and august (should be -31.0683)
 
 ```{r, drop}
-data %>% 
-  filter(month %in% c(6,7,8)) %>%
+data %>%
+  filter(month %in% c(6, 7, 8)) %>%
   pull(decimalLatitude) %>%
-  mean(na.rm=TRUE)
+  mean(na.rm = TRUE)
 ```
 
 3. Take the mean of all latitudes  for oberservations from december, january and february (should be -47.07444)
 
 ```{r, drop}
-data %>% 
-  filter(month %in% c(1,2,3)) %>%
+data %>%
+  filter(month %in% c(1, 2, 3)) %>%
   pull(decimalLatitude) %>%
-  mean(na.rm=TRUE)
+  mean(na.rm = TRUE)
 ```
 
 4. List all the species names in alphabetic order
@@ -199,9 +199,9 @@ data_subset <-
   data %>%
   select(Species, Latitude) %>%
   summarise(
-    nspp = n_distinct(Species), 
+    nspp = n_distinct(Species),
     max_lat = max(Latitude)
-    )
+  )
 ```
 
 **Exercises:** Apply the `dplyr` package and `pipes` to
@@ -209,13 +209,13 @@ data_subset <-
 1. Create a subset of the dataset consisting of only rows for the genus "Aptenodytes"
 
 ```{r, drop}
-subset_emperors<- data %>% filter(genus == "Aptenodytes")
+subset_emperors <- data %>% filter(genus == "Aptenodytes")
 ```
 
 2. As above and only including variables `scientificName`, `decimalLatitude`, `decimalLongitude `
 
 ```{r, drop}
-subset_emperors <- 
+subset_emperors <-
   data %>%
   filter(genus == "Aptenodytes") %>%
   select(scientificName, decimalLatitude, decimalLongitude)
@@ -224,7 +224,7 @@ subset_emperors <-
 3. As above but with data sorted  by `decimalLatitude`
 
 ```{r, drop}
-subset_mustelids <- 
+subset_mustelids <-
   data %>%
   filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%
@@ -234,7 +234,7 @@ subset_mustelids <-
 4. As above but with an additional column  giving the absolute value of `decimalLatitude`
 
 ```{r, drop}
-subset_mustelids <- 
+subset_mustelids <-
   data %>%
   filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%
@@ -280,7 +280,6 @@ data %>%
 Lots of functions naturally work like a for loop. These are what's called vectorised - which means they apply to all elements 
 
 ```{r, drop}
-
 data$scientificName %>% str_length()
 
 data$scientificName %>%
@@ -308,7 +307,7 @@ data <- data %>% bind_rows()
 
 Alternative way
 ```{r}
-data <- 
+data <-
   list.files("data/penguins", full.names = TRUE) %>%
   map(read_csv) %>%
   bind_rows()
@@ -421,9 +420,9 @@ file.copy("data/penguins/Aptenodytes forsteri.csv", "output/Aptenodytes forsteri
 Now let's copy all of them by calling map:
 
 ```{r}
-# 
+#
 location1 <- list.files("data/penguins", full.names = TRUE)
-location2 <- 
+location2 <-
   location1 %>% str_replace_all("data/penguins/", "output/data-")
 
 walk2(location1, location2, file.copy)

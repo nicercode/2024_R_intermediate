@@ -59,21 +59,19 @@ now some fun code (which will also be useful later).  Note that we're putting th
 
 ```{r}
 ggplot() +
-  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
+  geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
   coord_fixed(1.3)
-
 ```
 
 Note that we're putting the map data into the `geom` part of this call.  this means that we can add additional data to other geoms and plot on top of the map 
 
 ```{r}
-origin<-data.frame(x=0,y=0)
+origin <- data.frame(x = 0, y = 0)
 
 ggplot() +
-  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
-  coord_fixed(1.3)+
-  geom_point(data=origin,aes(x=x,y=0),col="red",size=5)
-
+  geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+  coord_fixed(1.3) +
+  geom_point(data = origin, aes(x = x, y = 0), col = "red", size = 5)
 ```
 
 now here is a new set of data on penguins! 🐧🐧🐧🐧 and maybe some new functions to learn
@@ -81,9 +79,8 @@ now here is a new set of data on penguins! 🐧🐧🐧🐧 and maybe some new f
 these are real data from GBIF with all of the features and flaws of real data.  
 
 ```{r}
-
-csv_file_name_vector <- list.files("data/penguins/",full.names = TRUE)
-# note that this returns the path from the working directory to all the penguin files. 
+csv_file_name_vector <- list.files("data/penguins/", full.names = TRUE)
+# note that this returns the path from the working directory to all the penguin files.
 # apparently there are 19 penguin species in the world.  The first one alphabetically is Aptenodytes forsteri
 ```
 
@@ -114,13 +111,13 @@ dim(output_df)
 Ugh this is gonna take forever ... what about a loop?
 
 ```{r}
-files <- list.files("data/penguins/",full.names = TRUE)
+files <- list.files("data/penguins/", full.names = TRUE)
 ```
 
 sometimes you want to use the index in the `for` loop for two different things, (1) going through the input vector and (2) storing in the output list. In this case the convention is to use the letter `i`, because it's hard to think of a more informative way to describe these two different (but related) roles.  The vector that `i` goes over is *usually* from 1 to the number of inputs or in this case `1:length(files)`
- 
+
 ```{r}
-pen<-list()
+pen <- list()
 for (i in 1:length(files)) {
   pen[[i]] <- read_csv(files[i])
 }
@@ -144,12 +141,11 @@ Here is part of the answer: the line of code for writing the dataframe to a file
 see if you can figure out the rest.  Other functions you might need are `unique` and `filter`, but there are many different solutions
 
 ```{r, drop}
+inat <- filter(pen_all, institutionCode == "iNaturalist")
 
-inat<-filter(pen_all, institutionCode=="iNaturalist")
-
-for(current_species in unique(inat$species)){
-  curr_df<-filter(inat, species==current_species)
-  write_csv(curr_df,paste0("data/inat_penguins/",current_species,".csv"))
+for (current_species in unique(inat$species)) {
+  curr_df <- filter(inat, species == current_species)
+  write_csv(curr_df, paste0("data/inat_penguins/", current_species, ".csv"))
 }
 ```
 
@@ -169,55 +165,50 @@ pen_all %>%
 3. calculate the proportion of points from iNaturalist and eBird using the institutionCode (the code for eBird is confusingly "CLO"; the code for iNaturalist is more sensibly "iNaturalist")
 
 ```{r, drop}
-sum(pen_all$institutionCode=="CLO",na.rm=T)/nrow(pen_all)
-sum(pen_all$institutionCode=="iNaturalist",na.rm=T)/nrow(pen_all)
+sum(pen_all$institutionCode == "CLO", na.rm = T) / nrow(pen_all)
+sum(pen_all$institutionCode == "iNaturalist", na.rm = T) / nrow(pen_all)
 ```
 
 4. plot the geographic distribution of observations with the colors showing genus, try to make it look good.  (this blog might help https://sarahpenir.github.io/r/making-maps/)
 
 ```{r, drop}
-
 world <- map_data("world")
 worldplot <- ggplot() +
-  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
-  coord_fixed(1.3)+
-  geom_point(data=pen_all,aes(x=decimalLongitude,y=decimalLatitude,col=genus))+
+  geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+  coord_fixed(1.3) +
+  geom_point(data = pen_all, aes(x = decimalLongitude, y = decimalLatitude, col = genus)) +
   theme_void()
 worldplot
-
 ```
 
 5. write a for loop that makes a map of each genus in a separate file with species as the colors.  Save the maps in a folder called `penguin_maps`.  `ggsave` is a handy function.  
 
 ```{r, drop}
-
-for (current_genus in unique(pen_all$genus)){
-  curr_df<-filter(pen_all,genus==current_genus)
+for (current_genus in unique(pen_all$genus)) {
+  curr_df <- filter(pen_all, genus == current_genus)
   world <- map_data("world")
-   ggplot() +
-  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
-  coord_fixed(1.3)+
-  geom_point(data=curr_df,aes(x=decimalLongitude,y=decimalLatitude,col=species))+
-  theme_void()
-  ggsave(paste0(current_genus,".pdf"))
+  ggplot() +
+    geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+    coord_fixed(1.3) +
+    geom_point(data = curr_df, aes(x = decimalLongitude, y = decimalLatitude, col = species)) +
+    theme_void()
+  ggsave(paste0(current_genus, ".pdf"))
 }
-
 ```
 
 
 5. plot the geographic distribution of observations of more than 1000 penguins, with the colors showing number of penguins observed
 
 ```{r, drop}
-
 world <- map_data("world")
 
-pen_large_counts <- filter(pen_all,individualCount>=1000)
-pen_small_counts <- filter(pen_all,individualCount<1000)
+pen_large_counts <- filter(pen_all, individualCount >= 1000)
+pen_small_counts <- filter(pen_all, individualCount < 1000)
 worldplot <- ggplot() +
-  geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
-  coord_fixed(1.3)+
-  geom_point(data=pen_small_counts,aes(x=decimalLongitude,y=decimalLatitude),col="grey",alpha=0.1)+
-  geom_point(data=pen_large_counts,aes(x=decimalLongitude,y=decimalLatitude),col="red")+
+  geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+  coord_fixed(1.3) +
+  geom_point(data = pen_small_counts, aes(x = decimalLongitude, y = decimalLatitude), col = "grey", alpha = 0.1) +
+  geom_point(data = pen_large_counts, aes(x = decimalLongitude, y = decimalLatitude), col = "red") +
   theme_void()
 worldplot
 ```
@@ -225,9 +216,9 @@ worldplot
 
 6. find a dubious penguin record and identify who's to blame
 ```{r, drop}
-pen_bad<-filter(pen_all,decimalLatitude==0)
+pen_bad <- filter(pen_all, decimalLatitude == 0)
 table(pen_bad$institutionCode)
 
-pen_bad2<-filter(pen_all,decimalLatitude>20)
+pen_bad2 <- filter(pen_all, decimalLatitude > 20)
 table(pen_bad2$institutionCode)
 ```
