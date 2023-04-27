@@ -171,8 +171,8 @@ Example:
 
 ```{r}
 data %>%
-  select(scientificName, genus, ends_with("tude")) %>%
-  filter(genus == "Aonyx") %>%
+  select(species, genus, ends_with("tude")) %>%
+  filter(genus == "Aptenodytes") %>%
   summarise(total_n = n())
 ```
 
@@ -224,7 +224,7 @@ subset_emperors <-
 3. As above but with data sorted  by `decimalLatitude`
 
 ```{r, drop}
-subset_mustelids <-
+subset_emp <-
   data %>%
   filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%
@@ -234,7 +234,7 @@ subset_mustelids <-
 4. As above but with an additional column  giving the absolute value of `decimalLatitude`
 
 ```{r, drop}
-subset_mustelids <-
+subset_emp <-
   data %>%
   filter(genus == "Aptenodytes") %>%
   select(scientificName, ends_with("tude")) %>%

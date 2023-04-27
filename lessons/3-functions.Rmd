@@ -37,13 +37,11 @@ Example 1 - tidy & turbo charge model fitting
 ```{r}
 only_counts <- filter(data, individualCount > 0)
 
-library(performance)
-
 fit_model <- function(data_in) {
   lm(log10(individualCount) ~ decimalLatitude, data = data_in)
 }
 
-check_model(fits[[1]])
+
 
 get_r2 <- function(fit_in) {
   r <- performance::r2(fit_in)
@@ -55,7 +53,7 @@ fits <-
   split(.$species) %>%
   map(fit_model)
 
-check_model(fits[[4]])
+performance::check_model(fits[[4]])
 
 map(fits, get_r2)
 ```
@@ -90,27 +88,27 @@ make_plot <- function(penguin_of_interest, pen_all = pen_all) {
 }
 
 
-make_plot(unique(pen_all$species)[10], pen_all)
+make_plot(unique(data$species)[10], data)
 ```
 
 
 Now let's use our new skills to make lots of plots!
 
 ```{r}
-penguin_species <- unique(pen_all$species)
-walk(penguin_species, make_plot, pen_all)
+penguin_species <- unique(data$species)
+walk(penguin_species, make_plot, data)
 ```
 
 Or we could save the plots
 ```{r}
-save_plot <- function(penguin_of_interest_in, pen_all = pen_all, path = "output/by_species/") {
+save_plot <- function(penguin_of_interest_in, pen_all, path = "output/by_species/") {
   dir.create(path, FALSE, TRUE)
   make_plot(penguin_of_interest_in, pen_all)
   ggsave(paste0(path, penguin_of_interest, ".png"))
 }
 
 for (penguin_of_interest in penguin_species) {
-  save_plot(penguin_of_interest, pen_all)
+  save_plot(penguin_of_interest, data)
 }
 ```
 
@@ -172,14 +170,14 @@ find_largest_negative_better <- function(x) {
   if (all(x > 0)) {
     y <- NA
   } else {
-    y <- max(x[x < 0])
+    y <- max(x[x < 0], na.rm = TRUE)
   }
   return(y)
 }
 
 
 data %>%
-  group_by(scientificName) %>%
+  group_by(species) %>%
   summarise(
     north_south = find_largest_negative_better(decimalLatitude)
   )
@@ -238,7 +236,7 @@ plot_genus <- function(df, genus) {
   ggsave(paste0("figures/", genus, ".pdf"))
 }
 
-plot_family(data, "Eudyptes")
+plot_genus(data, "Eudyptes")
 ```
 
 2. Now re-write this function so it works with map, and make a plot of all the genera
@@ -318,7 +316,7 @@ short_name <- function(x) {
 data$scientificName %>% map_chr(short_name)
 ```
 
-5. Your penguin colleagues think that some species migrate more than others.  They ask you to write a function that calculates the difference between median jun-jul-aug-sept latitude and median dec-jan-feb-mar latitude.  Then apply this function to each species. Return a table of "migration distance in latitude degrees" by species, also include the number of observations in summer and the number in winter.  the `%in%` function may be useful.  
+5. Your penguin colleagues seem to think that some species migrate more than others but no one knows by how much.  They ask you to write a function that calculates the difference between median jun-jul-aug-sept latitude and median dec-jan-feb-mar latitude.  Then apply this function to each species. Return a table of "migration distance in latitude degrees" by species, also include the number of observations in summer and the number in winter.  the `%in%` function may be useful.  
 
 Note some penguin species may have never been observed in winter.  (Where do they go????)
 
@@ -336,86 +334,16 @@ migration_latitude <- function(species_of_interest, df) {
 }
 
 output_df <- list()
-for (i in seq_along(unique(pen_all$species))) {
-  output_df[[i]] <- migration_latitude(unique(pen_all$species)[i], pen_all)
+for (i in seq_along(unique(data$species))) {
+  output_df[[i]] <- migration_latitude(unique(data$species)[i], data)
 }
 bind_rows(output_df)
 ```
-## Writing longer functions
 
-Store these in another file and load using `source`
-
-Identify the bit that will differ and 
-
-
-**Exercises:** Write a function called `load_data` that loads the penguin data and creates a column with short name and very short name
-
-```{r, drop}
-load_file <- function(x) {
-  read_csv(x,
-    col_types =
-      cols(
-        scientificName = col_character(),
-        family = col_character(),
-        decimalLatitude = col_double(),
-        decimalLongitude = col_double(),
-        genus = col_character(),
-        order = col_character()
-      )
-  ) %>%
-    mutate(filename = x)
-}
-
-
-load_data <- function() {
-  list.files("data/species", full.names = TRUE) %>%
-    map_df(load_file) %>%
-    mutate(
-      species = scientificName %>% map_chr(short_name),
-      species6 = scientificName %>% map_chr(very_short_name)
-    )
-}
-
-data <- load_data()
-```
 
 ## Extra exercises
 
-1. Write your own function to convert `decimalLatitude` to degrees minutes and seconds e.g 42.3601 becomes 42° 21' 36.36"
-  - For the degrees use the whole number part of the decimal
-  - For the minutes multiply the remaining decimal by 60. Use the whole number part of the answer as minutes.
-  - For the seconds multiply the new remaining decimal by 60
-  - Output degrees, minutes and seconds as separate columns
+Visualize penguin migrations for the different species.  one approach involves re-writing the function above to get out median lat and long.  
 
-```{r, drop}
-data$decimalLatitude[[1]]
-str_detect(as.character(data$decimalLatitude[[1]]), ".")
-
-convert_DMS <- function(data, var) {
-  # Split up first numeric string by decimal place
-  parts <- str_split(as.character(data[[var]]), "\\.", 2)
-
-  # Assign the first element as degrees
-  degrees <- parts[[1]][1] %>% as.numeric()
-
-  # Add back in the decimal place and multiple second element by 60 and assign as minutes
-  minutes <- paste0(".", parts[[1]][2]) %>% as.numeric() * 60
-
-  # Split minutes by decimal place for seconds
-  second_part <- minutes %>%
-    as.character() %>%
-    str_split("\\.", 2)
-
-  # Multiple values after the decimal place by 60 and assign as second
-  seconds <- paste0(".", second_part[[1]][2]) %>% as.numeric() * 60
-
-  # The return
-  data %>% mutate(
-    degrees = degrees,
-    minutes = minutes,
-    seconds = seconds
-  )
-}
-
-convert_DMS(data, decimalLatitude)
+```{r}
 ```
