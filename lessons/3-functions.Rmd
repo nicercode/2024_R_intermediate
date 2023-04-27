@@ -23,24 +23,10 @@ Use similar packages and data to yesterday
 library(tidyverse)
 ```
 
-Introduce new dataset - gapminder
+## First, let's load the dataset
 
 ```{r}
-data_gapminder <- read_csv("data/gapminder/gapminder-FiveYearData.csv")
-```
-
-## First, let's inspect the dataset
-
-Challenges:
-
-- run some basic summaries on the gapminder data
-  -  how many countries, years, continents are included in the data?
-  - what is the range of `lifeExp` & `gdpPercap` for each country?
-  - can you plot `lifeExp` vs `gdpPercap` in year 1992?
-  - can you plot `lifeExp` vs `gdpPercap` in year 1992, faceted by continent?  
-
-```{r, drop}
-
+data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 ```
 
 
@@ -49,75 +35,83 @@ Challenges:
 Example 1 - tidy & turbo charge model fitting
 
 ```{r}
-fit_model <- function(data) {
-  lm(lifeExp ~ gdpPercap, data = data)
+
+only_counts <- filter(data,individualCount>0)
+
+library(performance)
+
+fit_model <- function(data_in) {
+  lm(log10(individualCount) ~ decimalLatitude, data = data_in)
 }
 
-get_r2 <- function(fit) {
-  summary(fit)$r.squared
+check_model(fits[[1]])
+
+get_r2 <- function(fit_in) {
+  r<-performance::r2(fit_in)
+  return(r$R2)
 }
 
 fits <-
-  data_gapminder %>%
-  split(.$country) %>%
+  only_counts %>%
+  split(.$species) %>%
   map(fit_model)
 
-map_dbl(fits, get_r2)
+check_model(fits[[4]])
+
+map(fits, get_r2)
 ```
 
 
 Example 2 - tidy & turbo charge plotting
 
 ```{r}
-make_plot_year <- function(this_year, data) {
-  data %>%
-    filter(year == this_year) %>%
-    ggplot(aes(gdpPercap, lifeExp, colour = continent, size = log10(pop))) +
-    geom_point(alpha = 0.5) +
-    scale_x_log10(limits = c(200, 200000)) +
-    scale_y_log10(limits = c(20, 100)) +
-    theme_minimal() +
-    labs(x = "GDP per capita", y = "Life expectancy (yrs)", title = this_year)
+make_plot <- function(penguin_of_interest, pen_all = pen_all) {
+  world <- map_data("world")
+  specific_pen <- filter(pen_all, species == penguin_of_interest)
+  pen_large_counts <- filter(specific_pen, individualCount >= 1000)
+  pen_small_counts <- filter(specific_pen, individualCount < 1000)
+  worldplot <- ggplot() +
+    geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+    coord_fixed(1.3) +
+    geom_point(
+      data = pen_small_counts,
+      aes(x = decimalLongitude, y = decimalLatitude),
+      col = "grey",
+      alpha = 0.1
+    ) +
+    geom_point(data = pen_large_counts,
+               aes(x = decimalLongitude, y = decimalLatitude),
+               col = "red") +
+    ggtitle(penguin_of_interest) +
+    theme_void()
+  print(worldplot)
+  return(worldplot)
 }
 
-make_plot_year(1982, data_gapminder) %>% print()
+
+make_plot(unique(pen_all$species)[10],pen_all)
 ```
 
-The printing is kind of annoying, so could make another function:
+
+Now let's use our new skills to make lots of plots!
 
 ```{r}
-make_plot_year_print <- function(...) {
-  make_plot_year(...) %>% print()
-}
-
-make_plot_year_print(1982, data_gapminder)
-```
-
-No let's use our new skills to make lots of plots!
-
-```{r}
-years <- unique(data_gapminder$year)
-
-walk(years, make_plot_year_print, data_gapminder)
-
-for (year in years) {
-  make_plot_year_print(year, data_gapminder)
-}
+penguin_species <- unique(pen_all$species)
+walk(penguin_species, make_plot, pen_all)
 ```
 
 Or we could save the plots
 ```{r}
-save_plot <- function(this_year, data_gapminder, path = "output/by_year/") {
+save_plot <- function(penguin_of_interest_in, pen_all = pen_all, path = "output/by_species/") {
   dir.create(path, FALSE, TRUE)
-  make_plot_year(this_year, data_gapminder)
-  ggsave(paste0(path, this_year, ".png"))
+  make_plot(penguin_of_interest_in, pen_all)
+  ggsave(paste0(path, penguin_of_interest, ".png"))
 }
 
-for (year in years) {
-  save_plot(year, data_gapminder)
+for (penguin_of_interest in penguin_species) {
+  save_plot(penguin_of_interest, pen_all)
 }
 
-years %>% walk(save_plot, data_gapminder)
 ```
 
 # Structure of a function
@@ -147,9 +141,9 @@ mymean <- function(x) {
 
 **Exercises:**  
 
-Load carnivore data
+Load penguin data
 ```{r}
-carnivore_data <- list.files("data/species", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 ```
 
 1. Extract the most northern observations for each species in the southern hemisphere Write a function that finds the largest value that is below 0
@@ -159,7 +153,7 @@ find_largest_negative <- function(x) {
   max(x[x < 0])
 }
 
-carnivore_data %>% 
+data %>% 
   group_by(scientificName) %>%
   summarise(most_northern_south = find_largest_negative(decimalLatitude))
 ```
@@ -184,7 +178,7 @@ find_largest_negative_better <- function(x) {
 }
 
 
-carnivore_data %>% 
+data %>% 
   group_by(scientificName) %>%
   summarise(
     north_south = find_largest_negative_better(decimalLatitude)
@@ -207,7 +201,7 @@ load_file <- function(x) {
   read_csv(x) %>% mutate(filename = x)
 }
 
-carnivore_data <- list.files("data/species", full.names = TRUE) %>% map_df(load_file)
+data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
 ```
 
 **Exercises:**  We'll now make some plots
@@ -220,17 +214,18 @@ ggplot() +
   geom_polygon(
     data = world_map, aes(x = long, y = lat, group = group),
     fill = "darkgrey", colour = "white"
-  )
+  )+
+  coord_equal()
 ```
 
-1. Write a function that takes the dataframe and a family name and plots the distribution for each family and saves it to the output file in a folder called "figures"
+1. Write a function that takes the dataframe and a genus name and plots the distribution for each genus and saves it to the output file in a folder called "figures"
 
 ```{r, drop}
 dir.create("figures")
 
-plot_family <- function(df, family) {
+plot_genus <- function(df, genus) {
   df_specific_family <-
-    filter(df, family == family)
+    filter(df, genus == genus)
   world_map <- map_data("world")
   ggplot(df_specific_family, aes(x = decimalLongitude, y = decimalLatitude)) +
     geom_polygon(
@@ -238,18 +233,19 @@ plot_family <- function(df, family) {
       fill = "darkgrey", colour = "white"
     ) +
     geom_point() +
-    ggtitle(family)
-  ggsave(paste0("figures/", family, ".pdf"))
+    ggtitle(genus)
+  ggsave(paste0("figures/", genus, ".pdf"))
 }
 
-plot_family(carnivore_data, "Odobenidae")
+plot_family(data, "Eudyptes")
 ```
 
 2. Now re-write this function so it works with map, and make a plot of all the families
 
 ```{r, drop}
-plot_families <- function(fam, df) {
-  df_specific_family <- filter(df, family == fam)
+plot_genus <- function(df, genus) {
+  df_specific_family <-
+    filter(df, genus == genus)
   world_map <- map_data("world")
   ggplot(df_specific_family, aes(x = decimalLongitude, y = decimalLatitude)) +
     geom_polygon(
@@ -257,29 +253,20 @@ plot_families <- function(fam, df) {
       fill = "darkgrey", colour = "white"
     ) +
     geom_point() +
-    ggtitle(fam)
-  ggsave(paste0("figures/", fam, ".pdf"))
+    ggtitle(genus)
+  ggsave(paste0("figures/", genus, ".pdf"))
 }
 
-family_list <- as.list(unique(carnivore_data$family))
+genus_list <- as.list(unique(data$genus))
 
-map(family_list, plot_families, df = carnivore_data)
-```
-
-3. Some of the observations in GBIF are only identified to genus. Figure out how many this is and report for this dataset the percentage.  `str_to_sentence` or `toupper` or `word` might be useful.
-
-```{r, drop}
-carnivore_data$binom <- word(carnivore_data$scientificName, 1, 2)
-sum(carnivore_data$binom != str_to_sentence(carnivore_data$binom), na.rm = T) / length(carnivore_data$binom)
-
-problems <- filter(carnivore_data, binom != str_to_sentence(binom))
+map(genus_list, plot_genus, df = data)
 ```
 
 
-4. Your colleague asks you to match your data against theirs. They have used 6-letter abbreviations for species, i.e.. "urvjav" for "Urva javanica". Write a function to separate out the first two words from scientificName and use a map function to apply this to the full species list
+4. Your penguin colleague asks you to match your data against theirs. They have used 6-letter abbreviations for species, i.e.. "Aptfor" for "Aptenodytes forsteri". Write a function to separate out the first two words from scientificName and use a map function to apply this to the full species list.  the functions `word` and `str_sub` and `paste` might be useful.
 
 ```{r, drop}
-species <- carnivore_data$scientificName %>%
+species <- data$scientificName %>%
   unique() %>%
   sort()
 
@@ -290,7 +277,8 @@ very_short_name <- function(x) {
   )
 }
 
-carnivore_data$scientificName %>% map_chr(very_short_name)
+data$speciescode <- data$species %>% map_chr(very_short_name)
+
 ```
 
 ## Anonymous functions
@@ -327,7 +315,7 @@ short_name <- function(x) {
   paste(x2[[1]][1], x2[[1]][2])
 }
 
-carnivore_data$scientificName %>% map_chr(short_name)
+data$scientificName %>% map_chr(short_name)
 ```
 
 
@@ -338,7 +326,7 @@ Store these in another file and load using `source`
 Identify the bit that will differ and 
 
 
-**Exercises:** Write a function called `load_data` that loads the carnivora data and creates a column with short name and very short name
+**Exercises:** Write a function called `load_data` that loads the penguin data and creates a column with short name and very short name
 
 ```{r, drop}
 
@@ -379,12 +367,12 @@ data <- load_data()
   - Output degrees, minutes and seconds as separate columns
 
 ```{r, drop}
-carnivore_data$decimalLatitude[[1]]
-str_detect(as.character(carnivore_data$decimalLatitude[[1]]), ".")
+data$decimalLatitude[[1]]
+str_detect(as.character(data$decimalLatitude[[1]]), ".")
 
 convert_DMS <- function(data, var) {
   # Split up first numeric string by decimal place
-  parts <- str_split(as.character(carnivore_data[[var]]), "\\.", 2)
+  parts <- str_split(as.character(data[[var]]), "\\.", 2)
 
   # Assign the first element as degrees
   degrees <- parts[[1]][1] %>% as.numeric()
@@ -408,5 +396,5 @@ convert_DMS <- function(data, var) {
   )
 }
 
-convert_DMS(carnivore_data, decimalLatitude)
+convert_DMS(data, decimalLatitude)
 ```

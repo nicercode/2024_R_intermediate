@@ -211,8 +211,8 @@ for (current_genus in unique(pen_all$genus)){
 
 world <- map_data("world")
 
-pen_large_counts<-filter(pen_all,individualCount>=1000)
-pen_small_counts<-filter(pen_all,individualCount<1000)
+pen_large_counts <- filter(pen_all,individualCount>=1000)
+pen_small_counts <- filter(pen_all,individualCount<1000)
 worldplot <- ggplot() +
   geom_polygon(data = world, aes(x=long, y = lat, group = group)) + 
   coord_fixed(1.3)+
