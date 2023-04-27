@@ -96,7 +96,6 @@ a
 list_of_data <- list()
 
 aa <- read_csv(csv_file_name_vector[1])
-
 list_of_data[[1]] <- read_csv(csv_file_name_vector[1])
 list_of_data[[2]] <- read_csv(csv_file_name_vector[2])
 
@@ -197,7 +196,7 @@ for (current_genus in unique(pen_all$genus)) {
 ```
 
 
-5. plot the geographic distribution of observations of more than 1000 penguins, with the colors showing number of penguins observed
+6. plot the geographic distribution of observations of more than 1000 penguins, with the colors showing number of penguins observed
 
 ```{r, drop}
 world <- map_data("world")
@@ -214,7 +213,7 @@ worldplot
 ```
 
 
-6. find a dubious penguin record and identify who's to blame
+7. find a dubious penguin record and identify who's to blame
 ```{r, drop}
 pen_bad <- filter(pen_all, decimalLatitude == 0)
 table(pen_bad$institutionCode)
