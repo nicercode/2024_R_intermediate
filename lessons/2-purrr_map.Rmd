@@ -1,6 +1,6 @@
 ---
 title: "Introduction to `map`"
-author: "Will Cornwell, Daniel Falster, Fonti Kar, Aniko Toth"
+author: "Will Cornwell, Daniel Falster"
 output: html_notebook
 editor_options: 
   chunk_output_type: console
@@ -23,6 +23,7 @@ Here it is, constructed using for loops
 files <- list.files("data/penguins/", full.names = TRUE)
 data <- list()
 for (i in seq_along(files)) {
+  cat(i)
   data[[i]] <- read_csv(files[i])
 }
 data <- data %>% bind_rows()
@@ -32,14 +33,15 @@ data <- data %>% bind_rows()
 The alternative way using map is
 
 ```{r}
-data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) %>% 
+  map_df(read_csv, show_col_types = FALSE)
 ```
 
 Comparing the above two methods, which do you prefer and why?
 
 So we'll now work through how and why the map function works.
 
-# Tidyverse refresh
+# Tidyverse refresh & super powers
 
 * The [Tidyverse](http://tidyverse.org) is the name given to suite of R packages designed for seamless data analysis
 * Designed to help you fall into a **"Pit of Success"**
@@ -47,7 +49,7 @@ So we'll now work through how and why the map function works.
 * Not one but a collection packages
 * Dataframes (tibbles) are the universal "tidy" input and output
 
-Load (and install) individually or all together
+Load (and install) pacakges individually or all at once. 
 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -62,9 +64,9 @@ library(tidyr)
 library(ggplot2)
 ```
 
-Now, let's try counting the number of species in each family
+Now, let's try counting the number of species in each family.
 
-First, try using for loop
+First, try using a for loop (the old way, ugghh)
 
 ```{r}
 n <- list()
@@ -72,7 +74,7 @@ for (f in unique(data$genus)) {
   data_sub <- subset(data, data$genus == f)
   n[[f]] <- data.frame(family = f, n = n_distinct(data_sub$scientificName))
 }
-bind_rows(n)
+data <- bind_rows(n)
 ```
 
 The tidyverse way
@@ -197,10 +199,10 @@ Challenge, what to do when doesn't work, which bit?
 ```{r}
 data_subset <-
   data %>%
-  select(Species, Latitude) %>%
+  select(species, decimalLatitude) %>%
   summarise(
-    nspp = n_distinct(Species),
-    max_lat = max(Latitude)
+    nspp = n_distinct(species),
+    max_lat = max(decimalLatitude)
   )
 ```
 
@@ -313,6 +315,14 @@ data <-
   bind_rows()
 ```
 
+Can also embed the last step:
+
+```{r}
+data <-
+  list.files("data/penguins", full.names = TRUE) %>%
+  map_df(read_csv, show_col_types = FALSE)
+```
+
 How a map routine works works. 3 key steps
 
 - split: break out list or vector into bits
@@ -337,8 +347,7 @@ map(files, read_csv) %>% bind_rows()
 files %>% map(read_csv)
 
 list.files("data/penguins", full.names = TRUE) %>%
-  map(read_csv) %>%
-  bind_rows()
+  map_df(read_csv)
 ```
 
 A simpler example, print letters 1:10
@@ -362,12 +371,12 @@ files %>%
 ```
 
 
-2.  Split the dataset by family -- then count the number of rows. The function `split` is useful here.
+2.  Split the dataset by genus -- then count the number of rows. The function `split` is useful here.
 
 ```{r, drop}
 data %>%
-  split(.$family) %>%
-  map(nrow)
+  split(.$genus) %>%
+  map_int(nrow)
 ```
 
 
@@ -403,7 +412,8 @@ list.files("data/penguins", full.names = TRUE) %>%
 ```
 or
 ```{r}
-list.files("data/penguins", full.names = TRUE) %>% map_df(read_csv)
+list.files("data/penguins", full.names = TRUE) %>% 
+  map_df(read_csv)
 ```
 
 ### map2 -- when you have 2 inputs

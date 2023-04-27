@@ -1,9 +1,8 @@
-# The UNSW School of Biological, Earth & Environmental Sciences introduction to data manipulation and visulaization in R (INTERMEDIATE)
+# The UNSW School of Biological, Earth & Environmental Sciences introduction to data manipulation and visualasation in R (INTERMEDIATE)
 
-This repository contains content for a 2 day course for HDR students (and other interesting people), run within the School of Biological, Earth & Environmental Sciences (BEES) at the University of New South Wales. 
+This repository contains content for a 2 day course for HDR students (and other interesting people), run jointly by the School of Biological, Earth & Environmental Sciences (BEES) and Stats Central at the University of New South Wales. 
 
 ## Aims & Content
-
 
 Broad theme: Scaling up your analyses: how to get R to repeat the same task many times (possibly with different inputs) and organize the output in a useful way.
 
@@ -26,26 +25,24 @@ install.packages("broom")
 install.packages("tidyverse")
 ```
 
-Location: GO7 CATS ROOM - Computer lab
-
-
 ## Overview
 
 ### Day 1
-- Outline of course, logistics, housekeeping - Daniel
-- Intro to for loops - Will
-- Tidyverse refresh - Fonti + Daniel
+- Outline of course, logistics, housekeeping
+- Intro to for loops
+- Tidyverse refresh
   - Pipes
   - dplyr
-- Vectorised functions - Daniel
-- purrr (map, map2 and variants) - Aniko
+- Vectorised functions
+- purrr (map, map2 and variants)
 
 ### Day 2
-- Gapminder intro - Will
-- Structure of a function - Fonti 
-- Using own functions with map - Daniel
-- Anonymous functions in map - Aniko
-- Longer functions - Will
+
+- Structure of a function
+- Using own functions with map
+- Anonymous functions in map
+- Nest workflow
+- Longer functions
 
 
 

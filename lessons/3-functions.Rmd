@@ -1,6 +1,6 @@
 ---
 title: "Writing your own functions in R"
-author: "Will Cornwell, Daniel Falster, Fonti Kar, Aniko Toth"
+author: "Will Cornwell, Daniel Falster"
 output: html_notebook
 editor_options: 
   chunk_output_type: console
@@ -347,3 +347,5 @@ Visualize penguin migrations for the different species.  one approach involves r
 
 ```{r}
 ```
+
+# Nest operations
