@@ -203,13 +203,13 @@ Challenge, what to do when doesn't work, which bit?
 
 - to trouble shoot, run the parts
 
-```{r}
+```{r, eval=FALSE}
 data_subset <-
   data |>
-  select(species, decimalLatitude) |>
+  select(Species, decimalLatitude) |>
   summarise(
     nspp = n_distinct(species),
-    max_lat = max(decimalLatitude)
+    max_lat = mix(decimalLatitude)
   )
 ```
 
