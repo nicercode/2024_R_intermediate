@@ -26,7 +26,7 @@ library(tidyverse)
 ## First, let's load the dataset
 
 ```{r}
-data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv)
 ```
 
 
@@ -49,8 +49,8 @@ get_r2 <- function(fit_in) {
 }
 
 fits <-
-  only_counts %>%
-  split(.$species) %>%
+  only_counts |>
+  split(~species) |>
   map(fit_model)
 
 performance::check_model(fits[[4]])
@@ -141,7 +141,7 @@ mymean <- function(x) {
 
 Load penguin data
 ```{r}
-data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv)
 ```
 
 1. Extract the most northern observations for each species in the southern hemisphere Write a function that finds the largest value that is below 0
@@ -151,8 +151,8 @@ find_largest_negative <- function(x) {
   max(x[x < 0])
 }
 
-data %>%
-  group_by(scientificName) %>%
+data |>
+  group_by(scientificName) |>
   summarise(most_northern_south = find_largest_negative(decimalLatitude))
 ```
 
@@ -176,8 +176,8 @@ find_largest_negative_better <- function(x) {
 }
 
 
-data %>%
-  group_by(species) %>%
+data |>
+  group_by(species) |>
   summarise(
     north_south = find_largest_negative_better(decimalLatitude)
   )
@@ -189,17 +189,17 @@ data %>%
 From yesterday, we had this example
 
 ```{r}
-list.files("data/species", full.names = TRUE) %>% map_df(read_csv)
+list.files("data/species", full.names = TRUE) |> map_df(read_csv)
 ```
 
 What if we want to record which files each data point came from? Write a function that loads a file and adds the filename in a new column of the data
 
 ```{r, drop}
 load_file <- function(x) {
-  read_csv(x) %>% mutate(filename = x)
+  read_csv(x) |> mutate(filename = x)
 }
 
-data <- list.files("data/penguins/", full.names = TRUE) %>% map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv)
 ```
 
 
@@ -265,18 +265,18 @@ map(genus_list, plot_genus, df = data)
 4. Your penguin colleague asks you to match your data against theirs. They have used 6-letter abbreviations for species, i.e.. "Aptfor" for "Aptenodytes forsteri". Write a function to separate out the first two words from scientificName and use a map function to apply this to the full species list.  the functions `word` and `str_sub` and `paste` might be useful.
 
 ```{r, drop}
-species <- data$scientificName %>%
-  unique() %>%
+species <- data$scientificName |>
+  unique() |>
   sort()
 
 very_short_name <- function(x) {
   paste0(
-    word(x, 1, 1) %>% str_sub(1, 3),
-    word(x, 2, 2) %>% str_sub(1, 3)
+    word(x, 1, 1) |> str_sub(1, 3),
+    word(x, 2, 2) |> str_sub(1, 3)
   )
 }
 
-data$speciescode <- data$species %>% map_chr(very_short_name)
+data$speciescode <- data$species |> map_chr(very_short_name)
 ```
 
 ## Anonymous functions
@@ -285,23 +285,23 @@ Remember we did this:
 
 ```{r}
 load_file <- function(x) {
-  read_csv(x) %>% mutate(filename = x)
+  read_csv(x) |> mutate(filename = x)
 }
 
-list.files("data/species", full.names = TRUE) %>% map_df(load_file)
+list.files("data/species", full.names = TRUE) |> map_df(load_file)
 ```
 
 
 Another way:
 
 ```{r}
-list.files("data/species", full.names = TRUE) %>%
-  map_df(function(x) read_csv(x) %>% mutate(filename = x))
+list.files("data/species", full.names = TRUE) |>
+  map_df(function(x) read_csv(x) |> mutate(filename = x))
 
 
 # Or
-list.files("data/species", full.names = TRUE) %>%
-  map_df(~ read_csv(.x) %>% mutate(filename = .x))
+list.files("data/species", full.names = TRUE) |>
+  map_df(~ read_csv(.x) |> mutate(filename = .x))
 ```
 
 
@@ -309,11 +309,11 @@ list.files("data/species", full.names = TRUE) %>%
 
 ```{r, drop}
 short_name <- function(x) {
-  x2 <- x %>% str_split(" ")
+  x2 <- x |> str_split(" ")
   paste(x2[[1]][1], x2[[1]][2])
 }
 
-data$scientificName %>% map_chr(short_name)
+data$scientificName |> map_chr(short_name)
 ```
 
 5. Your penguin colleagues seem to think that some species migrate more than others but no one knows by how much.  They ask you to write a function that calculates the difference between median jun-jul-aug-sept latitude and median dec-jan-feb-mar latitude.  Then apply this function to each species. Return a table of "migration distance in latitude degrees" by species, also include the number of observations in summer and the number in winter.  the `%in%` function may be useful.  
@@ -325,7 +325,7 @@ migration_latitude <- function(species_of_interest, df) {
   sp_df <- filter(df, species == species_of_interest)
   winter <- filter(sp_df, month %in% c(6, 7, 8, 9))
   summer <- filter(sp_df, month %in% c(12, 1, 2, 3))
-  data.frame(
+  tibble(
     species = species_of_interest,
     lat_migration = median(summer$decimalLatitude, na.rm = TRUE) - median(winter$decimalLatitude, na.rm = TRUE),
     winter_n = nrow(winter),

@@ -154,7 +154,7 @@ for (current_species in unique(inat$species)) {
 2. Calculate how many species, genera, families, and orders there are in this dataset
 
 ```{r, drop}
-pen_all %>%
+pen_all |>
   summarise(
     n_species = n_distinct(scientificName),
     n_genera = n_distinct(genus),

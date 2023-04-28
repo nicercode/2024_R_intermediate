@@ -26,14 +26,14 @@ for (i in seq_along(files)) {
   cat(i)
   data[[i]] <- read_csv(files[i])
 }
-data <- data %>% bind_rows()
+data <- data |> bind_rows()
 ```
 
 
 The alternative way using map is
 
 ```{r}
-data <- list.files("data/penguins/", full.names = TRUE) %>% 
+data <- list.files("data/penguins/", full.names = TRUE) |> 
   map_df(read_csv, show_col_types = FALSE)
 ```
 
@@ -79,80 +79,85 @@ data <- bind_rows(n)
 
 The tidyverse way
 ```{r}
-data %>%
-  group_by(genus) %>%
+data |>
+  group_by(genus) |>
   summarise(n = n_distinct(scientificName))
 ```
 
 ## Pipes
 
-The pipe is a bit of magic. It's written by `%>%` (Shift-Command-M on Mac or Shift-Control-M on PC ). We can use "the pipe" [%>%](http://magrittr.tidyverse.org/reference/pipe.html) to connect expressions
+The pipe is a bit of magic. It's written by `|>` and is used to connect expressions together.
+
+The original pipe was [%>%](http://magrittr.tidyverse.org/reference/pipe.html) and was from the magrittr package. But `|>` is now in base R. 
+
 
 ```{r}
-data$genus %>% unique()
+data$genus |> unique()
 ```
 
 The pipe 
 
-* `%>%` "pipes" the **output** of the last expression as the **first input** of the next expression
+* `|>` "pipes" the **output** of the last expression as the **first input** of the next expression
 * expects commands on left & right
 * If you use RStudio, you can type the pipe with Ctrl + Shift + M if you have a PC or Cmd + Shift + M if you have a Mac.
 * you can control the input position of the next function with `.`:
 
 ```{r}
-2 %>% rnorm(1, 0)
-2 %>% rnorm(., 1, 0)
+2 |> rnorm(1, 0)
+2 |> rnorm(1, 0)
 
-2 %>% rnorm(1, 0, .)
+2 |> rnorm(1, 0, sd =_)
 
 ?rnorm() # TIP: To check what arguments you are check
 ```
+
+For more examples and a comparison between the old and new pipe, see https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-new-native-pipe-and-the-magrittr-pipe/72086492#72086492
 
 **Exercises:** Using the pipe, write expressions to
 
 1. Take the mean of all latitudes  (should be -43.90382)
 
 ```{r, drop}
-data$decimalLatitude %>% mean(na.rm = TRUE)
+data$decimalLatitude |> mean(na.rm = TRUE)
 ```
 
 
 2. Take the mean of all latitudes  for oberservations from june july and august (should be -31.0683)
 
 ```{r, drop}
-data %>%
-  filter(month %in% c(6, 7, 8)) %>%
-  pull(decimalLatitude) %>%
+data |>
+  filter(month %in% c(6, 7, 8)) |>
+  pull(decimalLatitude) |>
   mean(na.rm = TRUE)
 ```
 
 3. Take the mean of all latitudes  for oberservations from december, january and february (should be -47.07444)
 
 ```{r, drop}
-data %>%
-  filter(month %in% c(1, 2, 3)) %>%
-  pull(decimalLatitude) %>%
+data |>
+  filter(month %in% c(1, 2, 3)) |>
+  pull(decimalLatitude) |>
   mean(na.rm = TRUE)
 ```
 
 4. List all the species names in alphabetic order
 
 ```{r, drop}
-data %>%
-  arrange(scientificName) %>%
+data |>
+  arrange(scientificName) |>
   distinct(scientificName)
 ```
 
 5. List all the species names in reverse alphabetic order
 
 ```{r, drop}
-data$scientificName %>%
-  unique() %>%
-  sort() %>%
+data$scientificName |>
+  unique() |>
+  sort() |>
   rev()
 
-data %>%
-  arrange(scientificName) %>%
+data |>
+  arrange(scientificName) |>
   distinct(scientificName)
 ```
 
@@ -172,9 +177,9 @@ The package `dplyr` is the uses verbs to describe the actions we want to take on
 Example:
 
 ```{r}
-data %>%
-  select(species, genus, ends_with("tude")) %>%
-  filter(genus == "Aptenodytes") %>%
+data |>
+  select(species, genus, ends_with("tude")) |>
+  filter(genus == "Aptenodytes") |>
   summarise(total_n = n())
 ```
 
@@ -198,8 +203,8 @@ Challenge, what to do when doesn't work, which bit?
 
 ```{r}
 data_subset <-
-  data %>%
-  select(species, decimalLatitude) %>%
+  data |>
+  select(species, decimalLatitude) |>
   summarise(
     nspp = n_distinct(species),
     max_lat = max(decimalLatitude)
@@ -211,15 +216,15 @@ data_subset <-
 1. Create a subset of the dataset consisting of only rows for the genus "Aptenodytes"
 
 ```{r, drop}
-subset_emperors <- data %>% filter(genus == "Aptenodytes")
+subset_emperors <- data |> filter(genus == "Aptenodytes")
 ```
 
 2. As above and only including variables `scientificName`, `decimalLatitude`, `decimalLongitude `
 
 ```{r, drop}
 subset_emperors <-
-  data %>%
-  filter(genus == "Aptenodytes") %>%
+  data |>
+  filter(genus == "Aptenodytes") |>
   select(scientificName, decimalLatitude, decimalLongitude)
 ```
 
@@ -227,9 +232,9 @@ subset_emperors <-
 
 ```{r, drop}
 subset_emp <-
-  data %>%
-  filter(genus == "Aptenodytes") %>%
-  select(scientificName, ends_with("tude")) %>%
+  data |>
+  filter(genus == "Aptenodytes") |>
+  select(scientificName, ends_with("tude")) |>
   arrange(decimalLatitude)
 ```
 
@@ -237,10 +242,10 @@ subset_emp <-
 
 ```{r, drop}
 subset_emp <-
-  data %>%
-  filter(genus == "Aptenodytes") %>%
-  select(scientificName, ends_with("tude")) %>%
-  arrange(decimalLatitude) %>%
+  data |>
+  filter(genus == "Aptenodytes") |>
+  select(scientificName, ends_with("tude")) |>
+  arrange(decimalLatitude) |>
   mutate(abs_decimalLatitude = abs(decimalLatitude))
 ```
 
@@ -249,8 +254,8 @@ subset_emp <-
 Another useful dplyr function is `group_by`. This is a type of "for loop"
 
 ```{r}
-data %>%
-  group_by(genus) %>%
+data |>
+  group_by(genus) |>
   summarise(
     n_sp = n_distinct(scientificName),
     n_records = n()
@@ -267,8 +272,8 @@ Split apply combine concept
 1. Use dplyr's group_by function to get for each species, the number of records, min and max of decimalLatitude
 
 ```{r, drop}
-data %>%
-  group_by(scientificName) %>%
+data |>
+  group_by(scientificName) |>
   summarise(
     n = n(),
     lat_min = min(decimalLatitude),
@@ -282,10 +287,10 @@ data %>%
 Lots of functions naturally work like a for loop. These are what's called vectorised - which means they apply to all elements 
 
 ```{r, drop}
-data$scientificName %>% str_length()
+data$scientificName |> str_length()
 
-data$scientificName %>%
-  unique() %>%
+data$scientificName |>
+  unique() |>
   str_length()
 ```
 
@@ -304,14 +309,14 @@ data <- list()
 for (i in seq_along(files)) {
   data[[i]] <- read_csv(files[i])
 }
-data <- data %>% bind_rows()
+data <- data |> bind_rows()
 ```
 
 Alternative way
 ```{r}
 data <-
-  list.files("data/penguins", full.names = TRUE) %>%
-  map(read_csv) %>%
+  list.files("data/penguins", full.names = TRUE) |>
+  map(read_csv) |>
   bind_rows()
 ```
 
@@ -319,7 +324,7 @@ Can also embed the last step:
 
 ```{r}
 data <-
-  list.files("data/penguins", full.names = TRUE) %>%
+  list.files("data/penguins", full.names = TRUE) |>
   map_df(read_csv, show_col_types = FALSE)
 ```
 
@@ -342,18 +347,18 @@ read_csv(files[5])
 
 map(files, read_csv)
 
-map(files, read_csv) %>% bind_rows()
+map(files, read_csv) |> bind_rows()
 
-files %>% map(read_csv)
+files |> map(read_csv)
 
-list.files("data/penguins", full.names = TRUE) %>%
+list.files("data/penguins", full.names = TRUE) |>
   map_df(read_csv)
 ```
 
 A simpler example, print letters 1:10
 
 ```{r}
-letters[1:10] %>% walk(cat)
+letters[1:10] |> walk(cat)
 ```
 
 Important to understand how a list works
@@ -365,8 +370,8 @@ Important to understand how a list works
 ```{r, drop}
 files <- list.files("data/penguins", full.names = TRUE)[1:10]
 
-files %>%
-  map(read_csv) %>%
+files |>
+  map(read_csv) |>
   bind_rows()
 ```
 
@@ -374,8 +379,8 @@ files %>%
 2.  Split the dataset by genus -- then count the number of rows. The function `split` is useful here.
 
 ```{r, drop}
-data %>%
-  split(.$genus) %>%
+data |>
+  split(~genus) |>
   map_int(nrow)
 ```
 
@@ -391,28 +396,28 @@ Variants allow for different sorts of return -- i.e. what are you getting back
 ### Returning an integer
 
 ```{r}
-data %>%
-  split(.$family) %>%
-  map(nrow) %>%
+data |>
+  split(~family) |>
+  map(nrow) |>
   unlist()
 ```
 or 
 ```{r}
-data %>%
-  split(.$family) %>%
+data |>
+  split(~family) |>
   map_int(nrow)
 ```
 
 ### Returning a dataframe
 
 ```{r}
-list.files("data/penguins", full.names = TRUE) %>%
-  map(read_csv) %>%
+list.files("data/penguins", full.names = TRUE) |>
+  map(read_csv) |>
   bind_rows()
 ```
 or
 ```{r}
-list.files("data/penguins", full.names = TRUE) %>% 
+list.files("data/penguins", full.names = TRUE) |> 
   map_df(read_csv)
 ```
 
@@ -433,7 +438,7 @@ Now let's copy all of them by calling map:
 #
 location1 <- list.files("data/penguins", full.names = TRUE)
 location2 <-
-  location1 %>% str_replace_all("data/penguins/", "output/data-")
+  location1 |> str_replace_all("data/penguins/", "output/data-")
 
 walk2(location1, location2, file.copy)
 ```
