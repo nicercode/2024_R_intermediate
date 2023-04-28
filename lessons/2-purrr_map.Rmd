@@ -111,7 +111,9 @@ The pipe
 ?rnorm() # TIP: To check what arguments you are check
 ```
 
-For more examples and a comparison between the old and new pipe, see https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-new-native-pipe-and-the-magrittr-pipe/72086492#72086492
+For more examples and a comparison between the old and new pipe, see 
+- https://stackoverflow.com/questions/67633022/what-are-the-differences-between-rs-new-native-pipe-and-the-magrittr-pipe/72086492#72086492
+- https://towardsdatascience.com/understanding-the-native-r-pipe-98dea6d8b61b
 
 **Exercises:** Using the pipe, write expressions to
 
@@ -442,4 +444,21 @@ location2 <-
 
 walk2(location1, location2, file.copy)
 ```
+
+# Furrr
+
+The [furrr](https://furrr.futureverse.org/) package builds off the future package, which provides a lightweight and elegant way to evaluate R expressions asynchronously across many cores, CPUs, and clusters.
+
+
+The goal of furrr is to combine purrr's family of mapping functions with future's parallel processing capabilities. 
+
+Example
+
+```{r}
+
+```
+
+# About your computers
+
+RAM vs CPU vs Cores
 

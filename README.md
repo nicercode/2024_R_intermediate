@@ -30,7 +30,7 @@ install.packages("tidyverse")
 ### Day 1
 - Outline of course, logistics, housekeeping
 - Intro to for loops
-- Tidyverse refresh
+- Tidyverse refresh & extension
   - Pipes
   - dplyr
 - Vectorised functions
