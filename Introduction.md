@@ -38,7 +38,7 @@ Expectations
 
 - We try hard to move everyone along
 
-- raised hands - I ened help
+- raised hands - I need help
 
 - Live coding
   - We're going to do a lot of live coding -> why?

@@ -59,7 +59,8 @@ Now some fun code (which will also be useful later). This code makes a plot of t
 world <- map_data("world")
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
-  coord_fixed(1.3)+theme_bw()
+  coord_fixed(1.3) +
+  theme_bw()
 ```
 
 Note that we're putting the map data into the `geom` part of this call.  This means that we can add additional data to other geoms and plot on top of the map 
@@ -207,7 +208,7 @@ Note in this case the index is only needed for one thing so you can use an infor
 Here is part of the answer: the line of code for writing the dataframe to a file, with one way to do the naming part.  
 
 ```{r}
-write_csv(curr_df, paste0("data/inat_penguins/",current_species,".csv"))
+write_csv(curr_df, paste0("data/inat_penguins/", current_species,".csv"))
 ```
 
 see if you can figure out the rest.  Other functions you might need are `unique` and `filter`, but there are many different solutions

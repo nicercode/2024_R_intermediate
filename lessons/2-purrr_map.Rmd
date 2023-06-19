@@ -218,7 +218,8 @@ data_subset <-
 1. Create a subset of the dataset consisting of only rows for the genus "Aptenodytes"
 
 ```{r, drop}
-subset_emperors <- data |> filter(genus == "Aptenodytes")
+subset_emperors <- 
+  data |> filter(genus == "Aptenodytes")
 ```
 
 2. As above and only including variables `scientificName`, `decimalLatitude`, `decimalLongitude `
@@ -370,9 +371,9 @@ Important to understand how a list works
 1. Load the first 10 files in the folder "data/species"
 
 ```{r, drop}
-files <- list.files("data/penguins", full.names = TRUE)[1:10]
+files <- list.files("data/penguins", full.names = TRUE)
 
-files |>
+files[1:10] |>
   map(read_csv) |>
   bind_rows()
 ```
@@ -412,12 +413,6 @@ data |>
 
 ### Returning a dataframe
 
-```{r}
-list.files("data/penguins", full.names = TRUE) |>
-  map(read_csv) |>
-  bind_rows()
-```
-or
 ```{r}
 list.files("data/penguins", full.names = TRUE) |> 
   map_df(read_csv)

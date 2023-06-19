@@ -27,7 +27,7 @@ library(performance)
 ## First, let's load the dataset
 
 ```{r}
-data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv, show_col_types = FALSE)
 ```
 
 
@@ -56,7 +56,7 @@ fits <-
 
 performance::check_model(fits[[4]])
 
-map(fits, get_r2)
+map_dbl(fits, get_r2)
 ```
 
 
@@ -69,12 +69,12 @@ make_plot <- function(penguin_of_interest, pen_all = pen_all) {
   pen_large_counts <- filter(specific_pen, individualCount >= 1000)
   pen_small_counts <- filter(specific_pen, individualCount < 1000)
   worldplot <- ggplot() +
-    geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
+    geom_polygon(data = world, aes(x = long, y = lat, group = group), fill= "grey") +
     coord_fixed(1.3) +
     geom_point(
       data = pen_small_counts,
       aes(x = decimalLongitude, y = decimalLatitude),
-      col = "grey",
+      col = "red",
       alpha = 0.1
     ) +
     geom_point(
@@ -104,8 +104,8 @@ Or we could save the plots
 ```{r}
 save_plot <- function(penguin_of_interest_in, pen_all, path = "output/by_species/") {
   dir.create(path, FALSE, TRUE)
-  make_plot(penguin_of_interest_in, pen_all)
-  ggsave(paste0(path, penguin_of_interest, ".png"))
+  p <- make_plot(penguin_of_interest_in, pen_all)
+  ggsave(paste0(path, penguin_of_interest, ".png"), p)
 }
 
 for (penguin_of_interest in penguin_species) {
@@ -200,7 +200,7 @@ load_file <- function(x) {
   read_csv(x) |> mutate(filename = x)
 }
 
-data <- list.files("data/penguins/", full.names = TRUE) |> map_df(read_csv)
+data <- list.files("data/penguins/", full.names = TRUE) |> map_df(load_file)
 ```
 
 
@@ -336,4 +336,6 @@ Visualize penguin migrations for the different species.  one approach involves r
 
 ```{r}
 ```
+
+## Nests - turbo chargin map-based workflows
 
