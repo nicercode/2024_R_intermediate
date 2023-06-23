@@ -23,8 +23,7 @@ Here it is, constructed using for loops
 files <- list.files("data/penguins/", full.names = TRUE)
 data <- list()
 for (i in seq_along(files)) {
-  cat(i)
-  data[[i]] <- read_csv(files[i])
+  data[[i]] <- read_csv(files[i], show_col_types = FALSE)
 }
 data <- data |> bind_rows()
 ```
@@ -74,14 +73,28 @@ for (f in unique(data$genus)) {
   data_sub <- subset(data, data$genus == f)
   n[[f]] <- data.frame(family = f, n = n_distinct(data_sub$scientificName))
 }
-data <- bind_rows(n)
+data_n <- bind_rows(n)
 ```
 
 The tidyverse way
 ```{r}
 data |>
   group_by(genus) |>
-  summarise(n = n_distinct(scientificName))
+  summarise(
+    n = n_distinct(scientificName),
+    max_count = max(individualCount, na.rm=T)
+    ) 
+
+data |>
+  select(genus, individualCount) |>
+  group_by(genus) |>
+  mutate(
+    max_count = max(individualCount, na.rm=T)
+    ) |>
+  ungroup()
+
+
+
 ```
 
 ## Pipes
@@ -179,6 +192,10 @@ The package `dplyr` is the uses verbs to describe the actions we want to take on
 Example:
 
 ```{r}
+data1 <- subset(data, genus=="Megadyptes")
+data2 <- data[,c("genus", "species")]
+
+
 data |>
   select(species, genus, ends_with("tude")) |>
   filter(genus == "Aptenodytes") |>
@@ -206,10 +223,10 @@ Challenge, what to do when doesn't work, which bit?
 ```{r, eval=FALSE}
 data_subset <-
   data |>
-  select(Species, decimalLatitude) |>
+  select(species, decimalLatitude) |>
   summarise(
     nspp = n_distinct(species),
-    max_lat = mix(decimalLatitude)
+    max_lat = max(decimalLatitude)
   )
 ```
 
@@ -361,7 +378,7 @@ list.files("data/penguins", full.names = TRUE) |>
 A simpler example, print letters 1:10
 
 ```{r}
-letters[1:10] |> walk(cat)
+letters[1:10] |> walk(print)
 ```
 
 Important to understand how a list works
@@ -452,6 +469,24 @@ Example
 ```{r}
 
 ```
+
+
+## Nests - turbo chargin map-based workflows
+
+
+```{r}
+
+  data %>% 
+  nest(.by = c("genus", "species"))%>% 
+  mutate(
+    max_lat = map_dbl(data, ~ max(.x$decimalLatitude, na.rm = TRUE)),
+    fit = map(data, ~ lm(.x$decimalLatitude ~.x$decimalLongitude)),
+    model_r2 = map_dbl(fit, ~performance::r2(.x)$R2)
+  )
+
+
+```
+
 
 # About your computers
 

@@ -22,6 +22,7 @@ Use similar packages and data to yesterday
 ```{r}
 library(tidyverse)
 library(performance)
+library(report)
 ```
 
 ## First, let's load the dataset
@@ -39,24 +40,40 @@ Example 1 - tidy & turbo charge model fitting
 only_counts <- filter(data, individualCount > 0)
 
 fit_model <- function(data_in) {
-  lm(log10(individualCount) ~ decimalLatitude, data = data_in)
+  model <- lm(log10(individualCount) ~ decimalLatitude, data = data_in)
+  return(model)
 }
 
 
-
+# take in a model object and return an r2 value
 get_r2 <- function(fit_in) {
   r <- performance::r2(fit_in)
   return(r$R2)
 }
+
+pen_species<-unique(data$species)
+just_one_penguin<-filter(data,species==pen_species[1])
+one_penguin_model<-fit_model(just_one_penguin)
+get_r2(one_penguin_model)
 
 fits <-
   only_counts |>
   split(~species) |>
   map(fit_model)
 
+map_dbl(fits, get_r2)
+
+map_dbl(fits, ~performance::r2(.x)$R2)
+map_dbl(fits, ~performance::r2(.x)[["R2"]])
+
+
+map_dbl(fits, ~performance::r2(.x)[["R2"]])
+
+
+performance::r2(fits[[1]]) %>% names()
+
 performance::check_model(fits[[4]])
 
-map_dbl(fits, get_r2)
 ```
 
 

@@ -50,12 +50,20 @@ for (current_letter in letters) {
 for (current_letter in letters[letters != "q"]) {
   print(current_letter)
 }
+
+letters_not_q <- letters[letters!="q"]
+
+for (current_letter in letters_not_q){
+  print(current_letter)
+}
+
 ```
 
 
 Now some fun code (which will also be useful later). This code makes a plot of the world.  Iou can see that it's just a `ggplot` call with a `geom_polygon` added.  Then the `coord_fixed` call is just scaling x relative y so that the world is not distorted.  This is a common thing to do with maps.
 
 ```{r}
+library(ggplot2)
 world <- map_data("world")
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group)) +
@@ -88,6 +96,7 @@ https://en.wikipedia.org/wiki/Emperor_penguin
 
 
 ```{r}
+library(tidyverse)
 a <- read_csv("data/penguins/Aptenodytes forsteri.csv")
 a
 
@@ -102,6 +111,8 @@ list_of_data[[2]] <- read_csv(csv_file_name_vector[2])
 dim(list_of_data[[1]])
 dim(list_of_data[[2]])
 
+names(list_of_data[[1]]) == names(list_of_data[[2]])
+
 output_df <- bind_rows(list_of_data)
 
 dim(output_df)
@@ -111,6 +122,10 @@ Ugh this is gonna take forever ... what about a loop?
 
 ```{r}
 files <- list.files("data/penguins/", full.names = TRUE)
+
+i <- 4
+files[i]
+
 ```
 
 sometimes you want to use the index in the `for` loop for two different things, (1) going through the input vector and (2) storing in the output list. In this case the convention is to use the letter `i`, because it's hard to think of a more informative way to describe these two different (but related) roles.  The vector that `i` goes over is *usually* from 1 to the number of inputs or in this case `1:length(files)`
@@ -118,8 +133,21 @@ sometimes you want to use the index in the `for` loop for two different things, 
 ```{r}
 pen <- list()
 for (i in 1:length(files)) {
-  pen[[i]] <- read_csv(files[i])
+  pen[[i]] <- read_csv(files[i], show_col_types = FALSE)
 }
+
+pen <- list()
+for (f in files) {
+  pen[[f]] <- read_csv(f, show_col_types = FALSE)
+}
+
+
+pen <- list()
+for (f in files) {
+  pen[[f]] <- read_csv(f, show_col_types = FALSE)
+}
+names(pen) <- 
+  str_remove_all(names(pen), "data/penguins//") |> str_remove_all(".csv") 
 
 pen_all <- bind_rows(pen)
 dim(pen_all)
