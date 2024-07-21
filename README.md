@@ -29,12 +29,17 @@ install.packages("tidyverse")
 
 ### Day 1
 - Outline of course, logistics, housekeeping
-- Intro to for loops
-- Tidyverse refresh & extension
-  - Pipes
-  - dplyr
-- Vectorised functions
-- purrr (map, map2 and variants)
+- The big vision: a workflow for reproducible research (and for you)
+     - An example?  
+- Penguins! the goal for two days (questions)
+     - Scaling up   
+- Brainstorm of challenges
+   - 1. Yourself.  2. Your collaborator. 3. Stranger
+   - Organizing
+   - Git
+   - Scaling up
+   - For loops
+   - Functions
 
 ### Day 2
 
