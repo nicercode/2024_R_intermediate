@@ -160,8 +160,43 @@ Rendering docs (Daniel)
 
 no caching, outputs to console, don't save env
 
+Tools > Global Options 
+
 ## R environment 
 <!-- (Fonti) -->
 
 - document packages
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+# install.packages("usethis")
+?usethis::use_description()
+
+usethis::use_description()
+```
+
 - renv
+
+ You’ll then need to commit renv.lock, .Rprofile, renv/settings.json and renv/activate.R to version control, ensuring that others can recreate your project environment. If you’re using git, this is particularly simple because renv will create a .gitignore for you, and you can just commit all suggested files3.
+```{r}
+install.packages("renv")
+
+library(renv)
+
+init()
+
+install()  
+install.packages()
+
+snapshot()
+
+status()
+
+restore()
+
+update()
+```
+
