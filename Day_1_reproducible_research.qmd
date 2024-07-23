@@ -13,7 +13,7 @@ format: html
 - 13:15-14:45: Session 3 - Techniques for Reproducible Research (part 1)
 - 15:00-16:00: Session 4 - Techniques for Reproducible Research (part 2)
 
-# Welconing remarks
+# Welcome
 
 Logistics
 
@@ -41,8 +41,8 @@ Expectations
 - raised hands - I need help
 
 - Live coding
+  - We don't have fully worked files for you, there's lots of this kind of help on the web. 
   - We're going to do a lot of live coding -> why?
-  - Materials will be circulated, but we don't have fully worked files for you. There are lots of these already available (see Resources sections), including our own website: [Environmental Computing](http://environmentalcomputing.net/) 
   - Use the circulated files to take notes as you follow along
 
 Groups
@@ -54,29 +54,33 @@ Groups
   - What % of your time you expect to spend in the field/lab or at the computer
 
 # Sesssion 1: Challenges to Reproducible Research 
+<!-- Daniel -->
 
 - The big vision of the course: 
   1. A workflow for reproducible research (today) and
   2. Techniques scaling up you computations (tomorrow)
 
-- By the end of course, collaboratively built course notes and reproducible analyses, using new techniques
-  - Starting example:
-    - Download repro, example (zip)
-    - We're going to build on this!
-      - The data: Penguins! 
-      - Scaling up challenges   
-  
-- Activity: Identify challenges for reproducible research
-- Goals: 
-  1. reproducibility for a) Yourself, b) Your collaborator (supervisor), c).Stranger publication
+- Goals for today: 
+  1. Reproducibility for a) Yourself, b) Your collaborator (supervisor), c).Stranger publication
   2. Enjoy coding! Feeling in control. Start and stop projects. Collaboration. Effivient computations
+
+- By the end of course, collaboratively built course notes and reproducible analyses, using new techniques
+
+- Activity: Identify challenges for reproducible research
 
 - Brainstorm of challenges
   - break into groups of 3-4
   - Part 1: identify 3 challenges/problems for reproducibility (share around the group)
   - Part 2: go deeper on 1 issue, including possible solutions
 
+- Starting example:
+  - Download repro, example (zip)
+  - We're going to build on this!
+  - The data: Penguins! 
+  - Scaling up challenges   
+
 # Session 2: Collaboration and Version control with Git & Github
+<!-- Will -->
 
 Topics
 
@@ -88,6 +92,7 @@ Topics
 - browsing history on github
 
 Activities (slide + demo):
+<!-- Fonti -->
 
 1. Fork the class repo, contribute via a PR
   - fork the repo
@@ -105,12 +110,13 @@ Activities (slide + demo):
     - Resolve conflict
 
 # Sessions 3-4: Technqiues for Reproducible Research 
+<!-- Daniel -->
 
 13:30-16:00
 
-  - Goal: shared notes on how to solve (in github repo)
-    - demonstrators set up headings, then fill in as we go
-  - Voting: prioritise challenges for reporoducibility
+- Goal: shared notes on how to solve (in github repo)
+  - demonstrators set up headings, then fill in as we go
+- Voting: prioritise challenges for reporoducibility
 
 ## Organisation
 <!-- (Daniel) -->
@@ -126,22 +132,25 @@ Activities (slide + demo):
 - read only
 - metadata
 
-
 ## Reproducible code
 <!-- (Daniel) -->
 
-    - Goal: rerun all the time
-      - traps: broken code, package updates, rversion, reproducibility, slow compute (cluster), manual steps, libraries
-      - DRY. Why? future changes, resuse:  avoid lots of cut and paste (functions tomororw)
+- Goal: rerun all the time
+  - Rmd/R/Qmd -> export to console
+  - catches: broken code, missing dependencies, 
+  - traps: broken code, package updates, rversion,  slow compute (cluster), manual steps
 
-    - Rmd/R/Qmq
+- Don't repeat yourself. Why? 
+  - avoid lots of cut and paste (functions tomorrow)
+  - solve problem once, reuse
+  - easier to update
+  - safer
 
+Strive to maintain clean, working code 
 
-Maintaining clean, working code 
-
-- Clean accessible code
 - clean master script 
 - version control is your friend
+
 
 ## Saving outputs
 <!-- (Will, Daniel) -->
