@@ -35,7 +35,9 @@ We have just returned from an expedition from Anatarcia and collected *a lot* of
 
 
 ```{r, challenge-1-instructor-solutions}
-
+data <- list.files("lessons/data/penguins/", full.names = TRUE) |> 
+  map_df(read_csv, show_col_types = FALSE)
 ```
 
 
+## Challenge 2
