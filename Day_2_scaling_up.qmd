@@ -141,13 +141,28 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+# Read in combined dataset
+penguins_combined <- read_csv("data/penguin_combined.csv")
+
+# Read in body mass
+penguin_body_mass <- read_csv("data/penguin_body_mass.csv")
+
+# Join in common names
+penguins_combined_with_body_mass <- penguins_combined |> 
+  left_join(penguin_body_mass,  by = join_by(species == scientific_name))
 
 ```
 
-
-
-
 ## Challenge - Lots of descriptive statistics (Fonti)
+
+We need to report on some descriptive statistics of our penguin study. We need to know the following:
+
+- How many different genera are represented in our dataset
+- How many different species do we have for each genera
+- How many records by species
+- How many records by year
+- How many records by country code
+- How many records by basis of record
 
 <!-- Group by summarise -->
 
@@ -172,7 +187,39 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+# Read in combined dataset
+penguins_combined <- read_csv("data/penguin_combined.csv")
 
+# Records x genus
+penguins_combined |> 
+  count(genus)
+
+# Species x genus
+penguins_combined |> 
+  group_by(genus) |> 
+  summarise(n_species = n_distinct(species))
+
+# Species
+penguins_combined |> 
+    group_by(species) |> 
+    summarise(n = n())
+
+
+# A function for how summarise records by variable
+summarise_records_by <- function(data, var_name){
+  data |> 
+    group_by({{var_name}}) |> 
+    summarise(n = n())
+}
+
+penguins_combined |> 
+  summarise_records_by(year)
+
+penguins_combined |> 
+  summarise_records_by(countryCode)
+
+penguins_combined |> 
+  summarise_records_by(basisOfRecord)
 ```
 
 ## Challenge - Add n_records as a column (Daniel)
@@ -198,13 +245,21 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+# Read in combined dataset
+penguins_combined <- read_csv("data/penguin_combined.csv")
 
+penguins_combined_n_records <- penguins_combined |> 
+  group_by(species) |> 
+  mutate(n_records = n()) |> 
+  ungroup()
+
+# write_csv(penguins_combined_n_records, "data/penguins_combined_n_records_by_species.csv")
 ```
 
 
-## Challenge - Map of distributions of Top 3 most recorded taxa 
+## Challenge - Determine the top 3 most recorded taxa 
 
-<!-- slice_max -->
+<!-- nest, slice_max, ggplot -->
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -227,7 +282,11 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+penguins_combined_n_records_by_species <- read_csv("data/penguins_combined_n_records_by_species.csv")
 
+penguins_combined_n_records_by_species |> 
+  distinct(species, n_records) |> 
+  slice_max(order_by = n_records, n = 3) 
 ```
 
 
