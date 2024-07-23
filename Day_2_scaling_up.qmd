@@ -1,0 +1,73 @@
+---
+title: "Day 2 - Scaling up your computations"
+format: html
+---
+
+# Introduction
+
+The goal of this session is to collaboratively solve a series of challenges that will introduce you to practices that enable you scale up your computations. Topics that challenges will cover involve: 
+
+- tidy data: tidyr pivot longer / pivot wider (Country )
+- dplyr: join, group_by
+- map, nest (Daniel)
+- expand.grid Penguin x Source (Daniel)
+- Functions
+    - types: anonymous, named
+    - when we use functions
+    - map workflows
+    - Nest workflow
+- longer functions
+
+## Load libraries
+
+We will primarily be using packages from the {tidyverse}, feel free to add more packages here to help solve the challenges.
+```{r}
+library(tidyverse)
+```
+
+
+## Challenge - Loading data from many files
+
+<!-- map -->
+
+We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
+
+```{r, challenge-1-learner-solutions}
+
+```
+
+```{r, challenge-1-instructor-solutions}
+# Map workflow for read_csv
+penguins_combined <- list.files("data/penguin_distributions/", full.names = TRUE) |> 
+  map(read_csv, show_col_types = FALSE) |> 
+  list_rbind()
+
+# write_csv(data, "data/penguins_combined.csv")
+```
+
+
+## Challenge 2 
+
+<!-- join -->
+
+We only have latin names for each species of penguin but we need common names for when we report our results to stakeholders. Our collaborator started compiling common names in a separate `.csv` in the `data/` folder. **Compile the common names for the remaining taxa and join these into the dataframe `penguins_combined`. You may need to import the `penguins_combined.csv` into R first. 
+
+```{r, challenge-2-learner-solutions}
+
+```
+
+
+```{r, challenge-2-instructor-solutions}
+# Read in combined dataset
+penguins_combined <- read_csv("data/penguin_combined.csv")
+
+# Read in common names
+penguins_common_names <- read_csv("data/penguin_common_names.csv")
+
+# Join in common names
+penguins_combined_with_common_names <- penguins_combined |> 
+  left_join(penguins_common_names,  by = join_by(species == scientific_name))
+```
+
+
+<!-- group_by -->

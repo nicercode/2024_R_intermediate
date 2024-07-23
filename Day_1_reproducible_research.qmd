@@ -36,15 +36,33 @@ Suggested timing
     - Part 2: go deeper on 1 issue, including possible solutions
 
 
-# Session 2:   Collaboration and Version control with Git & Github
+# Session 2: Collaboration and Version control with Git & Github
 
-  goals: 
-  
-  1. fork class repro, start contributing via a PR
-    - add a file with a short bio in a etx file
-  2. start your own repro with your group
-    - start adding stuff and suncing across computers
-    - maybe handle a conflict
+Topics
+
+- what is a git repo
+- what is a commit
+- git vs github (and gitlab, bitbucket etc)
+- syncing: pull & push
+- Forks & Pull Requests
+- browsing history on github
+
+Activities (slide + demo):
+
+1. Fork the class repo, contribute via a PR
+  - fork the repo
+  - clone repo locally in GH desktop
+  - Add a .md file with a short bio in a `doc/`
+  - push to github 
+  - create PR
+
+2. [Optional] Start a new repository with your group
+    - Add collaborators under Settings
+    - start adding project files
+    - Syncing across computers
+    - Make and push changes in different files
+    - Introduce a conflict
+    - Resolve conflict
 
 # Sessions 3-4: Technqiues for Reproducible Research 
 
@@ -55,42 +73,55 @@ Suggested timing
   - Voting: prioritise challenges for reporoducibility
 
 ## Organisation
-   
+(Daniel)
+
 - directory, folder structure: data, outputs
 - Rstudio projects
 - Rmd/R/Qmq
 
+## Data curation and storage
+(Will)
+
+- where
+- read only
+- metadata
+
+
 ## Reproducible code
+(Daniel)
 
     - Goal: rerun all the time
-      - traps: premature optimisation, broken code, package updates, rversion, reproducibility, slow compute (cluster), manual steps
+      - traps: broken code, package updates, rversion, reproducibility, slow compute (cluster), manual steps, libraries
       - DRY. Why? future changes, resuse:  avoid lots of cut and paste (functions tomororw)
 
     - Rmd/R/Qmq
- Maintaining clean, working code 
- - Clean accessible code
-  - clean master script 
-  - version control
 
+
+Maintaining clean, working code 
+
+- Clean accessible code
+- clean master script 
+- version control is your friend
 
 ## Saving outputs
+(Will, Daniel)
 
-figures: 
-    - ggsave, sepcify sizes, code it
-    - formats: pdf vs png
+figures (Will): 
+  - ggsave, sepcify sizes, code it
+  - formats: pdf vs png
 
-Redering docs
+Rendering docs (Daniel)
   - render docs: suppmat or reports
     - point & click vs coded
     - can format nicely
 
 ## Optimise Rstudio setup
+(Fonti, Daniel)
 
 no caching, outputs to console, don't save env
 
-## collaboration - github
-   
-## R environment
+## R environment 
+(Fonti)
 
 - document packages
 - renv
