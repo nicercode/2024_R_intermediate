@@ -7,9 +7,10 @@ format: html
 
 The goal of this session is to collaboratively solve a series of challenges that will introduce you to practices that enable you scale up your computations. Topics that challenges will cover involve: 
 
-- tidy data: tidyr pivot longer / pivot wider
+- tidy data: tidyr pivot longer / pivot wider (Country )
 - dplyr: join, group_by
-- map, nest
+- map, nest (Daniel)
+- expand.grid Penguin x Source (Daniel)
 - Functions
     - types: anonymous, named
     - when we use functions
@@ -25,11 +26,11 @@ library(tidyverse)
 ```
 
 
-## Challenge 1
+## Challenge - Loading data from many files
 
 <!-- map -->
 
-We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in seperate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
+We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
 
 ```{r, challenge-1-learner-solutions}
 
@@ -37,8 +38,9 @@ We have just returned from an expedition from Anatarcia and collected *a lot* of
 
 ```{r, challenge-1-instructor-solutions}
 # Map workflow for read_csv
-penguins_combined <- list.files("data/penguins/", full.names = TRUE) |> 
-  map_df(read_csv, show_col_types = FALSE)
+penguins_combined <- list.files("data/penguin_distributions/", full.names = TRUE) |> 
+  map(read_csv, show_col_types = FALSE) |> 
+  list_rbind()
 
 # write_csv(data, "data/penguins_combined.csv")
 ```
@@ -46,9 +48,9 @@ penguins_combined <- list.files("data/penguins/", full.names = TRUE) |>
 
 ## Challenge 2 
 
-<!-- join, group_by -->
+<!-- join -->
 
-We only have latin names for each species of penguin but we need common names for when we report our results to stakeholders. Our collaborator started compiling common names in a seperate `.csv` in the `data/` folder. **Compile the common names for the remaining taxa and join these into the dataframe `penguins_combined`. You may need to import the `penguins_combined.csv` into R first. 
+We only have latin names for each species of penguin but we need common names for when we report our results to stakeholders. Our collaborator started compiling common names in a separate `.csv` in the `data/` folder. **Compile the common names for the remaining taxa and join these into the dataframe `penguins_combined`. You may need to import the `penguins_combined.csv` into R first. 
 
 ```{r, challenge-2-learner-solutions}
 
@@ -66,3 +68,6 @@ penguins_common_names <- read_csv("data/penguin_common_names.csv")
 penguins_combined_with_common_names <- penguins_combined |> 
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
+
+
+<!-- group_by -->
