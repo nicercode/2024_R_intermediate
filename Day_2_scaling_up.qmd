@@ -32,11 +32,26 @@ library(tidyverse)
 
 We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
 
-```{r, challenge-1-learner-solutions}
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
 
 ```
 
-```{r, challenge-1-instructor-solutions}
+Demonstrator solutions: 
+```{r, instructor-solutions}
 # Map workflow for read_csv
 penguins_combined <- list.files("data/penguin_distributions/", full.names = TRUE) |> 
   map(read_csv, show_col_types = FALSE) |> 
@@ -46,18 +61,33 @@ penguins_combined <- list.files("data/penguin_distributions/", full.names = TRUE
 ```
 
 
-## Challenge 2 
+## Challenge - Import common names
 
 <!-- join -->
 
 We only have latin names for each species of penguin but we need common names for when we report our results to stakeholders. Our collaborator started compiling common names in a separate `.csv` in the `data/` folder. **Compile the common names for the remaining taxa and join these into the dataframe `penguins_combined`. You may need to import the `penguins_combined.csv` into R first. 
 
-```{r, challenge-2-learner-solutions}
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
 
 ```
 
+Demonstrator solutions: 
 
-```{r, challenge-2-instructor-solutions}
+```{r, instructor-solutions}
 # Read in combined dataset
 penguins_combined <- read_csv("data/penguin_combined.csv")
 
@@ -69,5 +99,160 @@ penguins_combined_with_common_names <- penguins_combined |>
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
 
+## Challenge - 
 
-<!-- group_by -->
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - 
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+
+## Challenge - 
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - 
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - 
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - 
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
