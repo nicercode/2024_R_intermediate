@@ -5,7 +5,26 @@ format: html
 
 # Introduction
 
-The goal of this session is to collaboratively solve a series of challenges that will introduce you to practices that enable you scale up your computations. Topics that challenges will cover involve: 
+The goal of this session is to collaboratively solve a series of challenges that will introduce you to practices that enable you scale up your computations.
+
+The data
+
+- (Re)introduce the Penguins data (Will)
+
+A common challenge: Repeating things
+
+- split, apply, combine (Dan)
+
+Tools
+
+- tidyverse: tables, group_by, summarise/mutate (Fonti)
+- map: for lists / vectors (Dan)
+- ggplot: facets 
+- functions (Fonti)
+
+
+--------------
+Challenges (delete once migarted down)
 
 - tidy data: tidyr pivot longer / pivot wider (Country )
 - dplyr: join, group_by
@@ -99,6 +118,119 @@ penguins_combined_with_common_names <- penguins_combined |>
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
 
+
+
+## Challenge - Lots of descriptive statistics
+
+<!-- Group by summarise -->
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - Add n_records as a column
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+
+
+
+## Challenge - Facet plot and save
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+## Challenge - Excluding rogue data
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+
+
 ## Challenge - 
 
 In words, describe what are the steps to solve the challenge: 
@@ -125,31 +257,7 @@ Demonstrator solutions:
 
 ```
 
-## Challenge - 
 
-In words, describe what are the steps to solve the challenge: 
-
-- 
-- 
-- 
-
-How would you solve this problem using existing knowledge: 
-
--
--
--
-
-Try solving this in R using new skills:
-
-```{r, learner-solutions}
-
-```
-
-Demonstrator solutions: 
-
-```{r, instructor-solutions}
-
-```
 
 
 ## Challenge - 
@@ -178,7 +286,9 @@ Demonstrator solutions:
 
 ```
 
-## Challenge - 
+
+
+## Challenge - a full matrix of observations 
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -204,7 +314,83 @@ Demonstrator solutions:
 
 ```
 
-## Challenge - 
+
+
+
+## Challenge - Make a lot of maps
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r}
+make_plot <- function(penguin_of_interest, pen_all = pen_all) {
+  world <- map_data("world")
+  specific_pen <- filter(pen_all, species == penguin_of_interest)
+  pen_large_counts <- filter(specific_pen, individualCount >= 1000)
+  pen_small_counts <- filter(specific_pen, individualCount < 1000)
+  worldplot <- ggplot() +
+    geom_polygon(data = world, aes(x = long, y = lat, group = group), fill= "grey") +
+    coord_fixed(1.3) +
+    geom_point(
+      data = pen_small_counts,
+      aes(x = decimalLongitude, y = decimalLatitude),
+      col = "red",
+      alpha = 0.1
+    ) +
+    geom_point(
+      data = pen_large_counts,
+      aes(x = decimalLongitude, y = decimalLatitude),
+      col = "red"
+    ) +
+    ggtitle(penguin_of_interest) +
+    theme_void()
+  print(worldplot)
+  return(worldplot)
+}
+
+
+make_plot(unique(data$species)[10], data)
+```
+
+
+Now let's use our new skills to make lots of plots!
+
+```{r}
+penguin_species <- unique(data$species)
+walk(penguin_species, make_plot, data)
+```
+
+Or we could save the plots
+```{r}
+save_plot <- function(penguin_of_interest_in, pen_all, path = "output/by_species/") {
+  dir.create(path, FALSE, TRUE)
+  p <- make_plot(penguin_of_interest_in, pen_all)
+  ggsave(paste0(path, penguin_of_interest, ".png"), p)
+}
+
+for (penguin_of_interest in penguin_species) {
+  save_plot(penguin_of_interest, data)
+}
+```
+
+## Challenge - Fit lots of models
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -227,8 +413,45 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+only_counts <- filter(data, individualCount > 0)
+
+fit_model <- function(data_in) {
+  model <- lm(log10(individualCount) ~ decimalLatitude, data = data_in)
+  return(model)
+}
+
+
+# take in a model object and return an r2 value
+get_r2 <- function(fit_in) {
+  r <- performance::r2(fit_in)
+  return(r$R2)
+}
+
+pen_species<-unique(data$species)
+just_one_penguin<-filter(data,species==pen_species[1])
+one_penguin_model<-fit_model(just_one_penguin)
+get_r2(one_penguin_model)
+
+fits <-
+  only_counts |>
+  split(~species) |>
+  map(fit_model)
+
+map_dbl(fits, get_r2)
+
+map_dbl(fits, ~performance::r2(.x)$R2)
+map_dbl(fits, ~performance::r2(.x)[["R2"]])
+
+
+map_dbl(fits, ~performance::r2(.x)[["R2"]])
+
+
+performance::r2(fits[[1]]) %>% names()
+
+performance::check_model(fits[[4]])
 
 ```
+
 
 ## Challenge - 
 
