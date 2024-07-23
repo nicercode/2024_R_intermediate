@@ -63,8 +63,6 @@ penguins_combined <- read_csv("data/penguin_combined.csv")
 penguins_common_names <- read_csv("data/penguin_common_names.csv")
 
 # Join in common names
-penguins_combined |> 
-    left_join(penguins_common_names,  by = join_by(species == scientific_name)) |> 
-  
-
+penguins_combined_with_common_names <- penguins_combined |> 
+  left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
