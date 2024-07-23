@@ -1,0 +1,96 @@
+---
+title: "Day 1 - Reproducible research is way better for everyone"
+format: html
+---
+
+Suggested timing
+
+- 09:00-10:30: Sesssion 1: Welcome, Course intro, Vision, Challenges to Reproducible Research 
+- 10:00-10:30: Morning tea 
+- 11:00-12:30: Collaboration and Version control with Git & Github
+- 12:30-13:15: Lunch
+- 13:15-14:45: Technqiues for Reproducible Research (part 1)
+- 15:00-16:00: Technqiues for Reproducible Research (part 2)
+
+
+# Sesssion 1: 
+
+- before class: installation issues
+- Outline of course, logistics, housekeeping
+- The big vision of the course: a workflow for reproducible research (today) and techniques scaling up you computations (tomorrow)
+  - By the end of course, collaboratively built course notes and reproducible analyses, using new techniques
+  - Starting example:
+    - Download repro, example (zip)
+    - We're going to build on this!
+      - The data: Penguins! 
+      - Scaling up challenges   
+  
+  - Activity: Identify challenges for reproducible research
+  - Goals: 
+    1. reproducibility for a) Yourself, b) Your collaborator (supervisor), c).Stranger publication
+    2. Enjoy coding! Feeling in control. Start and stop projects. Collaboration. Effivient computations
+
+  - Brainstorm of challenges
+    - break into groups of 3-4
+    - Part 1: identify 3 challenges/problems for reproducibility (share around the group)
+    - Part 2: go deeper on 1 issue, including possible solutions
+
+
+# Session 2:   Collaboration and Version control with Git & Github
+
+  goals: 
+  
+  1. fork class repro, start contributing via a PR
+    - add a file with a short bio in a etx file
+  2. start your own repro with your group
+    - start adding stuff and suncing across computers
+    - maybe handle a conflict
+
+# Sessions 3-4: Technqiues for Reproducible Research 
+
+13:30-16:00
+
+  - Goal: shared notes on how to solve (in github repo)
+    - demonstrators set up headings, then fill in as we go
+  - Voting: prioritise challenges for reporoducibility
+
+## Organisation
+   
+- directory, folder structure: data, outputs
+- Rstudio projects
+- Rmd/R/Qmq
+
+## Reproducible code
+
+    - Goal: rerun all the time
+      - traps: premature optimisation, broken code, package updates, rversion, reproducibility, slow compute (cluster), manual steps
+      - DRY. Why? future changes, resuse:  avoid lots of cut and paste (functions tomororw)
+
+    - Rmd/R/Qmq
+ Maintaining clean, working code 
+ - Clean accessible code
+  - clean master script 
+  - version control
+
+
+## Saving outputs
+
+figures: 
+    - ggsave, sepcify sizes, code it
+    - formats: pdf vs png
+
+Redering docs
+  - render docs: suppmat or reports
+    - point & click vs coded
+    - can format nicely
+
+## Optimise Rstudio setup
+
+no caching, outputs to console, don't save env
+
+## collaboration - github
+   
+## R environment
+
+- document packages
+- renv
