@@ -1,118 +1,55 @@
 # The UNSW School of Biological, Earth & Environmental Sciences & Stats Central introduction to data manipulation and visualisation in R (INTERMEDIATE)
 
-This repository contains content for a 2-day course for HDR students (and other interesting people), run jointly by the School of Biological, Earth & Environmental Sciences (BEES) and Stats Central at the University of New South Wales. 
+This repository contains content for a 2-day course for HDR students (and other interesting people), run jointly by the School of Biological, Earth & Environmental Sciences (BEES) and Stats Central at the University of New South Wales.
 
-## Aims & Content
+## Broad aims
 
-Broad themes: 
+In this course, we teach participants techniques for
 
-**1. Reproducible Research**
-**2. Scaling up your analyses**
+**1. Conducting reproducible research**, and 
+**2. Scaling up their computations**. 
 
-How to get R to repeat the same task many times (possibly with different inputs) and organise the output in a useful way.
+The techniques we cover under reproducible research empower researchers to
 
-This general coding skill could apply to processing lots of files from imaging or surveys or to simulations (statistical or individual-based) or to lots of observational data.  In general with medium-sized data projects you'll often find yourself having to repeat the same thing over and over, and it's good to learn how to get R to do this in an organised and efficient manner. There are lots of new powerful tools, but they take a bit of coding practice to learn.  
+- enjoy coding and feel confident in their results,
+- easily generate updates as needed,
+- collaborate effectively,
+- enhance the transparency of their results, and
+- publish their code. 
 
+When it comes to scaling up, we look at how to get R to repeat tasks (possibly with different inputs) in an efficient way and organise the output. This general skill is needed in diverse contexts, such as processing lots of files (e.g. from imaging or surveys), working with large datasets, runnign many models, or running simulations (statistical or individual-based). In these circumstances, you'll often find yourself having to repeat the same thing over and over and it's good to learn how to get R to do this in an organised and efficient manner. We'll introduce a series of powerful tools, all which take a bit of instruction and practice to master.
 
-## Installation instructions
+# Approach
 
-The course assumes you have the **[R](https://cran.r-project.org/)** software and the development environment **[RStudio](https://www.rstudio.com/products/rstudio/download/#download)** installed on your computer.
+We aim for this workshop to be interactive and involve participants in indetifying the challnges and solutions. It's easy to stand up and tell them evrything, o r give them a manual, but this doesn't necessarily lead to good learning outcomes and doesn't warrant an in-person course. Through discussion, problem solving, and live coding, we aim to
 
+- activate participants minds for learning
+- model live collaboration, coding, and problem solving,
+- give hands on practice at the techniques we want them to pick up, and
+- make the experience two-way and interactive, thereby inviting enw connections to be formed. 
 
-Install: tidyverse
+Further details on the content are in files
 
-```
-install.packages("devtools")
-install.packages("broom")
-install.packages("tidyverse")
-```
+- Day_1_reproducible_research.qmd
+- Day_2_scaling_up.qmd
 
-## Overview
+## Setup
 
+What to bring:
 
-### Day 1 - Reproducible research is way better for everyone
+- Laptop with relevant installations (see below) & charger
+- Water bottle & food
+- Determination, kindness, and a sense of humour.
+ 
+What software to install / prepare prior to arrival?
 
-9-10:30: 
+- R version 4.2 or newer (https://cran.rstudio.com/).
+- The tidyverse library (https://www.tidyverse.org)
+- Rstudio (https://posit.co/download/rstudio-desktop/). Note, R and RStudio are different pieces of software so please update Rstudio.
+- Github Desktop https://github.com/apps/desktop. Installing git may require extra components, depending on your machine.
+- If you haven’t already, please create an account with GitHub.com. We recommend using your UNSW or institutional ID as the primary email, so you can register for an education account (optional).
 
-- before class: installation issues
-- Outline of course, logistics, housekeeping
-- The big vision of the course: a workflow for reproducible research (today) and techniques scaling up you computations (tomorrow)
-  - By the end of course, collaboratively built course notes and reproducible analyses, using new techniques
-  - Starting example:
-    - Download repro, example (zip)
-    - We're going to build on this!
-      - The data: Penguins! 
-      - Scaling up challenges   
-  
-  - Activity: Identify challenges for reproducible research
-  - Goals: 
-    1. reproducibility for a) Yourself, b) Your collaborator (supervisor), c).Stranger publication
-    2. Enjoy coding! Feeling in control. Start and stop projects. Collaboration. Effivient computations
+## Creating a bootcamp repo
 
-  - Brainstorm of challenges
-    - break into groups of 3-4
-    - Part 1: identify 3 challenges/problems for reproducibility (share around the group)
-    - Part 2: go deeper on 1 issue, including possible solutions
+Note, this repo is intended for instructors. It is where we organise our materials. It is not intended that you circulate this to participants. Rather, our suggestons it tha you collaboratively build a repo of notes and techniques with participants, live, during the workshop. this will mdoel collaboration via git and github, and can involve participants contribtuing. 
 
-10-10:30: Morning tea 
-
-11-12:30: Git & Github
-  
-  goals: 
-  
-  1. fork class repro, start contributing via a PR
-    - add a file with a short bio in a etx file
-  2. start your own repro with your group
-    - start adding stuff and suncing across computers
-    - maybe handle a conflict
-  
-13:30-16:00
-
-  - Goal: shared notes on how to solve (in github repo)
-    - demonstrators set up headings, then fill in as we go
-  - Voting: prioritise challenges for reporoducibility
-  
-  - Solution topics to cover
-   - Organisation
-    - directory, folder structure: data, outputs
-    - Rstudio projects
-  - Reproducible analyses
-    - Rmd/R/Qmq
-    - Goal: rerun all the time
-      - traps: premature optimisation, broken code, package updates, rversion, reproducibility, slow compute (cluster), manual steps
-      - DRY. Why? future changes, resuse:  avoid lots of cut and paste (functions tomororw)
- - Saving outputs
-  - figures: 
-    - ggsave, sepcify sizes, code it
-    - formats: pdf vs png
-  - render docs: suppmat or reports
-    - point & click vs coded
-    - can format nicely
-    - 
- - Clean accessible code
-  - clean master script 
-  - version control
-   - Optimise Rstudio setup: no caching, outputs to console, don't save env
-   - collaboration - github
-   - R environment
-    - document packages
-    - renv
-   
-
-### Day 2 -- Techniques Scaling up your computations
-
-Approaches to cover: 
-
-- tidy data: tidyr pivot longer / pivot wider
-- dplyr: join, group_by
-- map, nest
-- Functions
-  - types: anonymous, named
-  - when we use functions
-  - map workflows
-    - into to map
-    - Nest workflow
-  - longer functions
-    - why? Benefits
-
-Break into groups, each group investigates 1 challenge, then reports back
