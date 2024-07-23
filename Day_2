@@ -1,0 +1,41 @@
+---
+title: "Day 2 - Scaling up your computations"
+format: html
+---
+
+# Introduction
+
+The goal of this session is to collaboratively solve a series of challenges that will introduce you to practices that enable you scale up your computations. Topics that challenges will cover involve: 
+
+- tidy data: tidyr pivot longer / pivot wider
+- dplyr: join, group_by
+- map, nest
+- Functions
+    - types: anonymous, named
+    - when we use functions
+    - map workflows
+    - Nest workflow
+- longer functions
+
+## Load libraries
+
+We will primarily be using packages from the {tidyverse}, feel free to add more packages here to help solve the challenges.
+```{r}
+libary(tidyverse)
+```
+
+
+## Challenge 1
+
+We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in seperate `.csv` files but we need to combine these into one large dataframe for analyses. How can we do this programmatically? 
+
+```{r, challenge-1-learner-solutions}
+
+```
+
+
+```{r, challenge-1-instructor-solutions}
+
+```
+
+
