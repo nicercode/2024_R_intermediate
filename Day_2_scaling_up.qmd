@@ -118,9 +118,36 @@ penguins_combined_with_common_names <- penguins_combined |>
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
 
+## Challenge - Import average body sizes (Fonti)
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
 
 
-## Challenge - Lots of descriptive statistics
+
+
+## Challenge - Lots of descriptive statistics (Fonti)
 
 <!-- Group by summarise -->
 
@@ -148,7 +175,36 @@ Demonstrator solutions:
 
 ```
 
-## Challenge - Add n_records as a column
+## Challenge - Add n_records as a column (Daniel)
+
+In words, describe what are the steps to solve the challenge: 
+
+- 
+- 
+- 
+
+How would you solve this problem using existing knowledge: 
+
+-
+-
+-
+
+Try solving this in R using new skills:
+
+```{r, learner-solutions}
+
+```
+
+Demonstrator solutions: 
+
+```{r, instructor-solutions}
+
+```
+
+
+## Challenge - Map of distributions of Top 3 most recorded taxa 
+
+<!-- slice_max -->
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -177,7 +233,7 @@ Demonstrator solutions:
 
 
 
-## Challenge - Facet plot and save
+## Challenge - Facet plot and export plots (Will)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -203,35 +259,7 @@ Demonstrator solutions:
 
 ```
 
-## Challenge - Excluding rogue data
-
-In words, describe what are the steps to solve the challenge: 
-
-- 
-- 
-- 
-
-How would you solve this problem using existing knowledge: 
-
--
--
--
-
-Try solving this in R using new skills:
-
-```{r, learner-solutions}
-
-```
-
-Demonstrator solutions: 
-
-```{r, instructor-solutions}
-
-```
-
-
-
-## Challenge - 
+## Challenge - Excluding rogue data (Fonti)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -259,8 +287,7 @@ Demonstrator solutions:
 
 
 
-
-## Challenge - 
+## Challenge - Save lots of data by year (Fonti)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -287,8 +314,7 @@ Demonstrator solutions:
 ```
 
 
-
-## Challenge - a full matrix of observations 
+## Challenge - A full matrix of observations (Daniel)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -317,7 +343,7 @@ Demonstrator solutions:
 
 
 
-## Challenge - Make a lot of maps
+## Challenge - Make a lot of maps (Will)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -390,7 +416,7 @@ for (penguin_of_interest in penguin_species) {
 }
 ```
 
-## Challenge - Fit lots of models
+## Challenge - Fit lots of models (Daniel)
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -453,7 +479,7 @@ performance::check_model(fits[[4]])
 ```
 
 
-## Challenge - 
+## Challenge - Generate alpha hulls for every species and compute range (Fonti)
 
 In words, describe what are the steps to solve the challenge: 
 
