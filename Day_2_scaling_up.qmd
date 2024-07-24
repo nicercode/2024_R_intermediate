@@ -330,6 +330,12 @@ penguins_combined_n_records_by_species |>
 
 ## Challenge 6 - Facet plot and export plots (Will)
 
+(a) Make a multipanel plot of global distribution by penguin genus
+
+(b) Make a multipanel plot of by month
+
+(c) Make a multipanel plot of by genus on the y-axis and individual count (<10 or >=10) on the x-axis
+
 In words, describe what are the steps to solve the challenge: 
 
 - 
@@ -351,7 +357,7 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
-
+  
 ```
 
 ## Challenge 7 - Excluding rogue data (Fonti)
@@ -607,6 +613,13 @@ Try solving this in R using new skills:
 
 ```{r, instructor-solutions}
 
+penguins_combined %>%
+  mutate(summer=month %in% c(1,2,3,12,11,10)) %>%
+  group_by(species,summer) %>%
+  summarize(med_lat=median(decimalLatitude,na.rm=TRUE)) %>%
+  pivot_wider(names_from = `summer`,values_from = `med_lat`) %>%
+  mutate(`Migration distance (degrees latitude)`=`FALSE`-`TRUE`) %>%
+  ggplot(aes(y=species,x=`Migration distance (degrees latitude)`))+geom_point()
 
 
 ```
