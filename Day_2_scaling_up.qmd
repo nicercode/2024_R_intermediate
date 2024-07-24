@@ -119,9 +119,11 @@ penguins_combined_with_common_names <- penguins_combined |>
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
 
-## Challenge - Taxonomic information into Palmer Penguins (Fonti)
+## Challenge - Add Size information (Fonti)
 
-We need to get add higher level taxonomic information e.g. phylum, class, order into the `penguin_size` dataset. 
+<!-- Group by summarise, join -->
+
+We need to get compute the average bill and flipper dimensions using the `penguin_sizes` data and nd merge this into the `penguins_combined` dataset. You name need to wrangle/create the penguin names a little
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -147,20 +149,44 @@ Demonstrator solutions:
 # Read in combined dataset
 penguins_combined <- read_csv("data/penguin_combined.csv")
 
+# Read in common names
+penguins_common_names <- read_csv("data/penguin_common_names.csv")
+
+# Join in common names
+penguins_combined_with_common_names <- penguins_combined |> 
+  left_join(penguins_common_names,  by = join_by(species == scientific_name))
+
 # Read in body mass
 penguin_size <- read_csv("data/penguin_sizes.csv")
 
 # Join in taxonomic information
-penguin_sizes_with_taxonomic_info 
+penguin_size$species |> unique()
 
-penguins_combined |> 
-  select(phylum:species) |> 
-  distinct()
+penguin_size_new_name <- penguin_size |> 
+  mutate(full_common_name = paste(species, "penguin")) |> 
+  select(full_common_name, species:year)
 
+penguin_size_new_name |> count(full_common_name)
 
-penguin_size |> 
-  left_join(penguin_body_mass,  by = join_by(species == scientific_name))
+penguin_averages <- penguin_size_new_name |> 
+  group_by(full_common_name) |> 
+  summarise(mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE),
+            mean_bill_depth_mm = mean(bill_depth_mm, na.rm = TRUE),
+            mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE)
+            ) 
 
+# Join bill dimensions
+penguins_combined_with_common_names |> count(common_name)
+
+# Check if names exist
+unique(penguins_combined_with_common_names$common_name)
+
+unique(penguin_size_new_name$full_common_name)
+
+# Join bill data
+penguins_combined_with_common_names |> 
+  left_join(penguin_averages, 
+            by = join_by(common_name == full_common_name))
 ```
 
 ## Challenge - Lots of descriptive statistics (Fonti)
