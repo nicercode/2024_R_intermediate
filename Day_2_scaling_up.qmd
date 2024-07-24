@@ -404,7 +404,9 @@ penguins_combined |>
 
 ## Challenge 8 - Save lots of data by year (Fonti)
 
-Your collaborator requires the giant penguin dataset to be broken down and saved as `.csv` by year
+<!-- group_by map and write_csv -->
+
+Your collaborator at the muesuem requires the giant penguin dataset to be broken down and saved as `.csv` by year. Solve this challenge with code!!
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -427,7 +429,14 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+penguins_combined
 
+penguins_list_by_year <- penguins_combined |> 
+  group_split(year) 
+
+names(penguins_list_by_year) <- sort(unique(penguins_combined$year))
+
+purrr::imap(penguins_list_by_year, ~write_csv(.x, file = paste0("output/penguins_",.y, ".csv")))
 ```
 
 
