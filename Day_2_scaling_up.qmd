@@ -261,7 +261,7 @@ penguins_combined |>
 
 ## Challenge 4 - Add n_records as a column (Daniel)
 
-
+For your analysis, you need to calculate the total number of records available for each species, and add that as a new column in your data.
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -296,7 +296,7 @@ penguins_combined_n_records <- penguins_combined |>
 ```
 
 
-## Challenge 5 - Determine the top 3 most recorded taxa 
+## Challenge 5 - Determine the top 3 most recorded taxa (Fonti)
 
 <!-- slice_max, ggplot -->
 
@@ -454,6 +454,8 @@ Demonstrator solutions:
 
 ## Challenge 10 - Make a lot of maps (Will)
 
+Make a folder and make 17 pdfs, one for each penguin species, with a map of that species.  Make the title of the plot include both the common name of the speices and the scientific name.  Make the file name the scientific name.
+
 In words, describe what are the steps to solve the challenge: 
 
 - 
@@ -587,7 +589,11 @@ performance::check_model(fits[[4]])
 
 ```
 
-## Challenge 12 - Migratory Penguins
+## Challenge 12 - How much do different penguin species migrate (Will)
+
+Your penguin collaborator knows from natural history knowledge that some penguins migrate and others don't but no one has ever quantified this.  Calculate the difference between the summer median latitude and the winter median latitude for each species.  (Median is more robust to outliers so that's more appropriate here compared to the mean.) Note there may be species with missing data for certain seasons and this may lead to missing species in the final plot. 
+
+Make a plot of species by degrees latitude migrated.    
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -609,6 +615,8 @@ Try solving this in R using new skills:
 
 
 ```{r, instructor-solutions}
+
+
 
 ```
 
