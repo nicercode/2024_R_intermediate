@@ -442,6 +442,8 @@ purrr::imap(penguins_list_by_year, ~write_csv(.x, file = paste0("output/penguins
 
 ## Challenge 9 - A full matrix of observations (Daniel)
 
+You want to make a graph of country x species, colouring for each species if it present in each country.
+
 In words, describe what are the steps to solve the challenge: 
 
 - 
@@ -463,6 +465,51 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+data <- penguins_combined
+
+# count the number of observations for each species in each country
+out_count <-
+  data %>%
+  group_by(species, countryCode) %>%
+  summarise(.groups = "drop",
+    # number of records
+    n = n()
+  ) %>%
+  filter(
+    !is.na(countryCode),
+    # consider a species present if > 3 obs
+    n > 3
+  )
+
+# Create a full grid of country x species combinations
+# unlike the counts above, this will contain cells where there are zero counts
+out_grid <- 
+  expand_grid(
+    species = unique(out_count$species),
+    countryCode = unique(out_count$countryCode)
+)
+
+# join these to get full counts
+out <-
+  left_join(
+    out_grid, out_count,
+    by = join_by(species, countryCode)
+  ) %>%
+  mutate(
+    # fill zeroes
+    n = replace_na(n, 0),
+    # TRUE-FALSE if speciesa is present
+    present = n > 0
+  )
+
+out %>%
+  # Reorder factor variables by number of species
+  mutate(
+    species = forcats::fct_reorder(species, present, sum),
+    countryCode = forcats::fct_reorder(countryCode, present, sum)
+  ) %>%
+  ggplot(aes(countryCode, species, fill= present)) +
+  geom_tile()
 
 ```
 
