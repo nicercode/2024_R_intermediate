@@ -49,7 +49,7 @@ library(tidyverse)
 
 <!-- map -->
 
-We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
+We have just returned from an expedition and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -118,7 +118,9 @@ penguins_combined_with_common_names <- penguins_combined |>
   left_join(penguins_common_names,  by = join_by(species == scientific_name))
 ```
 
-## Challenge - Import average body sizes (Fonti)
+## Challenge - Taxonomic information into Palmer Penguins (Fonti)
+
+We need to get add higher level taxonomic information e.g. phylum, class, order into the `penguin_size` dataset. 
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -145,10 +147,17 @@ Demonstrator solutions:
 penguins_combined <- read_csv("data/penguin_combined.csv")
 
 # Read in body mass
-penguin_body_mass <- read_csv("data/penguin_body_mass.csv")
+penguin_size <- read_csv("data/penguin_sizes.csv")
 
-# Join in common names
-penguins_combined_with_body_mass <- penguins_combined |> 
+# Join in taxonomic information
+penguin_sizes_with_taxonomic_info 
+
+penguins_combined |> 
+  select(phylum:species) |> 
+  distinct()
+
+
+penguin_size |> 
   left_join(penguin_body_mass,  by = join_by(species == scientific_name))
 
 ```
@@ -159,6 +168,7 @@ We need to report on some descriptive statistics of our penguin study. We need t
 
 - How many different genera are represented in our dataset
 - How many different species do we have for each genera
+- Calculate the proportion of points from iNaturalist and eBird using the institutionCode (the code for eBird is confusingly "CLO"; the code for iNaturalist is more sensibly "iNaturalist")
 - How many records by species
 - How many records by year
 - How many records by country code
@@ -223,6 +233,8 @@ penguins_combined |>
 ```
 
 ## Challenge - Add n_records as a column (Daniel)
+
+
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -319,6 +331,8 @@ Demonstrator solutions:
 ```
 
 ## Challenge - Excluding rogue data (Fonti)
+
+
 
 In words, describe what are the steps to solve the challenge: 
 

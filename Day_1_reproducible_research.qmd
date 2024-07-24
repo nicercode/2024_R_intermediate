@@ -124,16 +124,16 @@ Activities (slide + demo):
 - directory, folder structure: data, outputs
 - Rstudio projects
 
-## Documents/Code
-<!-- (Fonti) -->
-- md/Rmd/R/Qmd
-
 ## Data curation and storage
 <!-- (Will) -->
 
 - where
 - read only
 - metadata
+
+## Documents/Code
+<!-- (Fonti) -->
+- md/Rmd/R/Qmd
 
 ## Reproducible code
 <!-- (Daniel) -->
