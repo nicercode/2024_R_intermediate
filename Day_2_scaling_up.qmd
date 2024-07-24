@@ -49,7 +49,7 @@ library(tidyverse)
 
 <!-- map -->
 
-We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
+We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. Sometimes "we" counted the penguins.  Sometimes we didn't.  We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -72,7 +72,7 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 ```{r, instructor-solutions}
 # Map workflow for read_csv
-penguins_combined <- list.files("data/penguin_distributions/", full.names = TRUE) |> 
+penguins_combined <- list.files("data/penguin_distributions", pattern=".csv",full.names = TRUE) |> 
   map(read_csv, show_col_types = FALSE) |> 
   list_rbind()
 
