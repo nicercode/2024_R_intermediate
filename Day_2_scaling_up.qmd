@@ -9,42 +9,31 @@ The goal of this session is to collaboratively solve a series of challenges that
 
 The data
 
-- (Re)introduce the Penguins data (Will)
+- (Re)introduce the Penguins data
 
 A common challenge: Repeating things
 
-- split, apply, combine (Dan)
+- split, apply, combine
 
-Tools
+Several tools that can help us apply this workflow
 
-- tidyverse: tables, group_by, summarise/mutate (Fonti)
-- map: for lists / vectors (Dan)
+- tidyverse: tables, group_by, summarise/mutate
+- map: for lists / vectors
 - ggplot: facets 
-- functions (Fonti)
+- functions
 
-The Challenges (delete once migarted down)
-
-- 
-- tidy data: tidyr pivot longer / pivot wider (Country )
-- dplyr: join, group_by
-- map, nest (Daniel)
-- expand.grid Penguin x Source (Daniel)
-- Functions
-    - types: anonymous, named
-    - when we use functions
-    - map workflows
-    - Nest workflow
-- longer functions
 
 ## Load libraries
 
 We will primarily be using packages from the {tidyverse}, feel free to add more packages here to help solve the challenges.
+
 ```{r}
 library(tidyverse)
+dir.create("output")
 ```
 
 
-## All - Loading data from many files
+## Challenge 0 - Loading data from many files
 
 We have just returned from an expedition from Anatarcia and collected *a lot* of data from multiple species of penguins. Sometimes "we" counted the penguins.  Sometimes we didn't.  We recorded data for each species in separate `.csv` files but **we need to combine these into one large dataframe for analyses. How can we do this programmatically?** 
 
@@ -145,7 +134,8 @@ Demonstrator solutions:
 # Read in combined dataset
 penguins_combined <- read_csv("data/penguin_combined.csv")
 
-penguins_combined_n_records <- penguins_combined |> 
+penguins_combined_n_records <- 
+  penguins_combined |> 
   group_by(species) |> 
   mutate(n_records = n()) |> 
   ungroup()
@@ -225,7 +215,7 @@ penguins_combined |>
 penguins_combined |> 
   filter(individualCount > 0,
          institutionCode %in% c("iNaturalist", "CLO"))  |> 
-  write_csv("data/cleaned_penguins_combined.csv")
+  write_csv("data/penguins_combined_cleaned.csv")
 ```
 
 
@@ -263,7 +253,8 @@ penguins_common_names <- read_csv("data/penguin_common_names.csv")
 # Join in common names
 penguins_combined_with_common_names <- 
   penguins_combined |> 
-  left_join(penguins_common_names,  by = join_by(species == scientific_name))
+  left_join(penguins_common_names,  
+    by = join_by(species == scientific_name))
 
 # Read in body mass
 penguin_size <- read_csv("data/penguin_sizes.csv")
@@ -281,10 +272,11 @@ penguin_size_new_name |> count(full_common_name)
 penguin_averages <- 
   penguin_size_new_name |> 
   group_by(full_common_name) |> 
-  summarise(mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE),
-            mean_bill_depth_mm = mean(bill_depth_mm, na.rm = TRUE),
-            mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE)
-            ) 
+  summarise(
+    mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE),
+    mean_bill_depth_mm = mean(bill_depth_mm, na.rm = TRUE),
+    mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE)
+    ) 
 
 # Join bill dimensions
 penguins_combined_with_common_names |> count(common_name)
@@ -329,11 +321,11 @@ penguins_combined
 
 penguins_list_by_year <- 
   penguins_combined |> 
-  group_split(year) 
+  group_split(year)
 
 names(penguins_list_by_year) <- sort(unique(penguins_combined$year))
 
-purrr::imap(penguins_list_by_year, ~ write_csv(.x, file = paste0("output/penguins_", .y, ".csv")))
+purrr::iwalk(penguins_list_by_year, ~ write_csv(.x, file = paste0("output/penguins_", .y, ".csv")))
 ```
 
 
@@ -425,8 +417,8 @@ penguins_combined |>
 
 # Species
 penguins_combined |> 
-    group_by(species) |> 
-    summarise(n = n())
+  group_by(species) |> 
+  summarise(n = n())
 
 
 # A function for how summarise records by variable
@@ -505,11 +497,10 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
-data <- penguins_combined
 
 # count the number of observations for each species in each country
 out_count <-
-  data |>
+  penguins_combined |>
   group_by(species, countryCode) |>
   summarise(.groups = "drop",
     # number of records
@@ -548,6 +539,7 @@ out |>
     species = forcats::fct_reorder(species, present, sum),
     countryCode = forcats::fct_reorder(countryCode, present, sum)
   ) |>
+  # Pass modified data into ggplot
   ggplot(aes(countryCode, species, fill= present)) +
   geom_tile()
 
@@ -604,28 +596,29 @@ make_plot <- function(penguin_of_interest, pen_all = pen_all) {
   return(worldplot)
 }
 
+# choose a species to try it
+penguin_species <- unique(penguins_combined$species)
+spp <- penguin_species[10]
 
-make_plot(unique(data$species)[10], data)
+make_plot(spp, penguins_combined)
 ```
 
 
 Now let's use our new skills to make lots of plots!
 
 ```{r}
-penguin_species <- unique(data$species)
-
-walk(penguin_species, make_plot, data)
+walk(penguin_species, make_plot, penguins_combined)
 ```
 
 Or we could save the plots
 ```{r}
-save_plot <- function(penguin_of_interest_in, pen_all, path = "output/by_species/") {
+save_plot <- function(penguin_spp, data, path = "output/by_species/") {
   dir.create(path, FALSE, TRUE)
-  p <- make_plot(penguin_of_interest_in, pen_all)
-  ggsave(paste0(path, penguin_of_interest, ".png"), p)
+  p <- make_plot(penguin_spp, data)
+  ggsave(paste0(path, penguin_spp, ".png"), p)
 }
 
-walk(penguin_species, save_plot, data)
+walk(penguin_species, save_plot, penguins_combined)
 ```
 
 ## Challenge 12 - Fit lots of models
