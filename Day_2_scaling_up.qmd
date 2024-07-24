@@ -298,7 +298,9 @@ penguins_combined_n_records <- penguins_combined |>
 
 ## Challenge 5 - Determine the top 3 most recorded taxa 
 
-<!-- nest, slice_max, ggplot -->
+<!-- slice_max, ggplot -->
+
+We need to know which are the top 3 species that we have the the most records. Can you figure which species are these?
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -356,12 +358,12 @@ Demonstrator solutions:
 
 ## Challenge 7 - Excluding rogue data (Fonti)
 
-We need to clean the data a little before we analyse it. Exclude the following: 
+We need to clean the data a little before we analyse it. Clean the data so that we have
 
--  Observations older than 1930
--  Individual counts < 0
-- 
+- Individual counts < 0
+- Observations from iNaturalist and eBird using the `institutionCode` (the code for eBird is confusingly "CLO"; the code for iNaturalist is more sensibly "iNaturalist")
 
+Export this dataset as a `.csv`
 
 In words, describe what are the steps to solve the challenge: 
 
@@ -384,12 +386,19 @@ Try solving this in R using new skills:
 Demonstrator solutions: 
 
 ```{r, instructor-solutions}
+penguins_combined |> 
+  count(basisOfRecord) |> 
+  print(n = Inf)
 
+penguins_combined |> 
+  filter(individualCount > 0,
+         institutionCode %in% c("iNaturalist", "CLO"))  |> 
+  write_csv("data/cleaned_penguins_combined.csv")
 ```
 
-
-
 ## Challenge 8 - Save lots of data by year (Fonti)
+
+Your collaborator requires the giant penguin dataset to be broken down and saved as `.csv` by year
 
 In words, describe what are the steps to solve the challenge: 
 
