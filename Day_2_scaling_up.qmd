@@ -406,7 +406,7 @@ penguins_combined |>
 
 <!-- group_by map and write_csv -->
 
-Your collaborator at the muesuem requires the giant penguin dataset to be broken down and saved as `.csv` by year. Solve this challenge with code!!
+Your collaborator at the museum requires the giant penguin dataset to be broken down and saved as `.csv` by year. Solve this challenge with code!!
 
 In words, describe what are the steps to solve the challenge: 
 
