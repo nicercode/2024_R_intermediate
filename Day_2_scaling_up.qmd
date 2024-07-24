@@ -261,7 +261,7 @@ penguins_combined |>
 
 ## Challenge 4 - Add n_records as a column (Daniel)
 
-
+For your analysis, you need to calculate the total number of records available for each species, and add that as a new column in your data.
 
 In words, describe what are the steps to solve the challenge: 
 
