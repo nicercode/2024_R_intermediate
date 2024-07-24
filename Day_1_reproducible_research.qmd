@@ -80,7 +80,7 @@ Groups
   - Scaling up challenges   
 
 # Session 2: Collaboration and Version control with Git & Github
-<!-- Will -->
+<!-- Will and Fonti -->
 
 Topics
 
@@ -123,7 +123,10 @@ Activities (slide + demo):
 
 - directory, folder structure: data, outputs
 - Rstudio projects
-- Rmd/R/Qmq
+
+## Documents/Code
+<!-- (Fonti) -->
+- md/Rmd/R/Qmd
 
 ## Data curation and storage
 <!-- (Will) -->
